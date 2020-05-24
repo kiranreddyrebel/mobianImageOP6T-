@@ -10,5 +10,7 @@ locale-gen
 # Change plymouth default theme
 plymouth-set-default-theme mobian
 
-# Load phosh on startup
-systemctl enable phosh.service
+# Load phosh on startup, if it exists.    
+if service --status-all | grep -Fq 'phosh'; then    
+  systemctl enable phosh.service
+fi
