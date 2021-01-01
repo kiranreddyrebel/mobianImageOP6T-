@@ -22,18 +22,18 @@ username=
 no_blockmap=
 ssh=
 
-while getopts "cdDizobse:f:h:m:p:t:u:F:" opt
+while getopts "dDizobsc:e:f:h:m:p:t:u:F:" opt
 do
   case "$opt" in
-    c ) cpus="$OPTARG" ;;
     d ) use_docker=1 ;;
     D ) debug=1 ;;
-    e ) environment="$OPTARG" ;;
     i ) image_only=1 ;;
     z ) do_compress=1 ;;
     b ) no_blockmap=1 ;;
     s ) ssh=1 ;;
     o ) installer=1 ;;
+    c ) cpus="$OPTARG" ;;
+    e ) environment="$OPTARG" ;;
     f ) ftp_proxy="$OPTARG" ;;
     h ) http_proxy="$OPTARG" ;;
     m ) memory="$OPTARG" ;;
