@@ -23,6 +23,7 @@ actions:
       image: {{ $image }}
       imagesize: 8GB
       rootstart: 5GiB
+      target: true
 
   - action: filesystem-deploy
     description: Deploy filesystem onto image

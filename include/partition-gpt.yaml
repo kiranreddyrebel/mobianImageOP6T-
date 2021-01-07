@@ -3,6 +3,7 @@
 {{- $image := or .image "mobian-$device.img" -}}
 {{- $imagesize := or .imagesize "3.8GB" }}
 {{- $rootstart := or .rootstart "512MiB" }}
+{{- $target := or .target false }}
 
 architecture: {{ $architecture }}
 
@@ -27,7 +28,12 @@ actions:
       - name: boot
         fs: ext4
         start: 256MiB
-        end: 512MiB
+        end: 600MiB
+    {{ if $target }}
+      - name: target
+        start: 600MiB
+        end: {{ $rootstart }}
+    {{ end }}
       - name: rootfs
         fs: {{ $filesystem }}
         start: {{ $rootstart }}
