@@ -62,11 +62,13 @@ case "$device" in
     family="amd64"
     device="efi"
     partitiontable="gpt"
+    ARGS="$ARGS -t imagesize:20GB"
     ;;
   "amd64-legacy" )
     arch="amd64"
     family="amd64"
     device="pc"
+    ARGS="$ARGS -t imagesize:20GB"
     ;;
   * )
     echo "Unsupported device '$device'"

@@ -5,6 +5,7 @@
 {{- $filesystem := or .filesystem "ext4" }}
 {{- $environment := or .environment "phosh" -}}
 {{- $image := or .image "mobian-$device-$environment.img" -}}
+{{- $imagesize := or .imagesize "3.8GB" }}
 
 architecture: {{ $architecture }}
 
@@ -17,6 +18,7 @@ actions:
     variables:
       filesystem: {{ $filesystem }}
       image: {{ $image }}
+      imagesize: {{ $imagesize }}
 
   - action: filesystem-deploy
     description: Deploy filesystem onto image
