@@ -16,6 +16,10 @@ system, install these dependencies by typing the following command in a terminal
 sudo apt install debos bmap-tools
 ```
 
+Do note that the debos provided in Debian 10 (Buster) is not new enough
+(it will error out with "Unknown action: recipe"), the one in Debian
+Bullseye/testing works.
+
 If your system isn't debian-based (or if you choose to install `debos` without
 using `apt`, which is a terrible idea), please make sure you also install the
 following required packages:
