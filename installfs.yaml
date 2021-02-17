@@ -49,7 +49,7 @@ actions:
   - action: run
     description: Set up installer
     chroot: true
-    script: scripts/setup-installer.sh
+    script: scripts/setup-installer.sh {{ $username }}
 
   - action: pack
     file: installfs-{{ $architecture }}.tar.gz
