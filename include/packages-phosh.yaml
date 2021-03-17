@@ -19,7 +19,6 @@ actions:
       - fractal
       - geary
       - gedit
-      - gnome-authenticator
       - gnome-calculator
       - gnome-calendar
       - gnome-maps
