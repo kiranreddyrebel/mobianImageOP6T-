@@ -26,6 +26,7 @@ actions:
       - gnome-usage
       - gnome-weather
       - kgx
+      - libblockdev-crypto2
       - lollypop
       - portfolio-filemanager
       - webext-ublock-origin
