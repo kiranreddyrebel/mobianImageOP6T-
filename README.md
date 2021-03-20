@@ -20,6 +20,9 @@ Do note that the debos provided in Debian 10 (Buster) is not new enough
 (it will error out with "Unknown action: recipe"), the one in Debian
 Bullseye/testing works.
 
+The build system will cache and re-use it's output files. To create a fresh build
+remove `*.tar.gz`, `*.sqfs` and `*.img` before starting the build.
+
 If your system isn't debian-based (or if you choose to install `debos` without
 using `apt`, which is a terrible idea), please make sure you also install the
 following required packages:
