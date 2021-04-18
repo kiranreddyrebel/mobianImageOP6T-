@@ -3,6 +3,7 @@
 {{- $password := or .password "1234" -}}
 {{- $hostname := or .hostname "mobian" -}}
 {{- $environment := or .environment "phosh" -}}
+{{- $nonfree := or .nonfree "false" -}}
 {{- $ssh := or .ssh "" -}}
 {{- $suite := or .suite "bullseye" -}}
 
@@ -13,6 +14,9 @@ actions:
     suite: {{ $suite }}
     components:
       - main
+{{ if eq $nonfree "true" }}
+      - non-free
+{{ end }}
     mirror: http://deb.debian.org/debian
     variant: minbase
 

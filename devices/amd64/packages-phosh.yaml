@@ -8,5 +8,9 @@ actions:
     recommends: false
     description: Install device-specific packages
     packages:
+{{ if eq $device "efi" "pc" }}
       - linux-image-amd64
       - grub-{{ $device }}
+{{ else }}
+      - {{ $device }}-support
+{{ end }}

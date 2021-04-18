@@ -57,6 +57,12 @@ case "$device" in
     arch="arm64"
     family="librem5"
     ;;
+  "surfacepro3" )
+    arch="amd64"
+    family="amd64"
+    partitiontable="gpt"
+    ARGS="$ARGS -t nonfree:true -t imagesize:5GB"
+    ;;
   "amd64" )
     arch="amd64"
     family="amd64"

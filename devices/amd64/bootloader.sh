@@ -6,9 +6,8 @@ DEVICE="$1"
 update-grub
 
 # Install grub to the MBR/ESP
-if [ "$DEVICE" = "efi" ]; then
-    grub-install --target=x86_64-efi --efi-directory=/boot/efi
-    echo fs0:\\EFI\\debian\\grubx64.efi > /boot/efi/startup.nsh
+if [ "$DEVICE" != "pc" ]; then
+    grub-install --target=x86_64-efi --removable /dev/vda
 else
     grub-install /dev/vda
 fi
