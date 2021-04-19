@@ -21,8 +21,9 @@ username=
 no_blockmap=
 ssh=
 suite="bullseye"
+sign=
 
-while getopts "dDizobsS:e:f:h:m:p:t:u:F:" opt
+while getopts "dDizobsS:e:f:g:h:m:p:t:u:F:" opt
 do
   case "$opt" in
     d ) use_docker=1 ;;
@@ -35,6 +36,7 @@ do
     o ) installer=1 ;;
     f ) ftp_proxy="$OPTARG" ;;
     h ) http_proxy="$OPTARG" ;;
+    g ) sign="$OPTARG" ;;
     m ) memory="$OPTARG" ;;
     p ) password="$OPTARG" ;;
     t ) device="$OPTARG" ;;
@@ -156,4 +158,14 @@ fi
 if [ "$do_compress" ]; then
   echo "Compressing $image_file..."
   gzip --keep --force $image_file
+fi
+
+if [ -n "$sign" ]; then
+    if [ "$do_compress" ]; then
+        sha256sum ${image_file}.gz > ${image_file}.sha256sums
+    else
+        sha256sum ${image_file} > ${image_file}.sha256sums
+    fi
+    sha256sum ${image_file}.bmap >> ${image_file}.sha256sums
+    gpg -u ${sign} --clearsign ${image_file}.sha256sums
 fi
