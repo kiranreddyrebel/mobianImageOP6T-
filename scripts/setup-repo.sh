@@ -1,10 +1,9 @@
 #!/bin/sh
 
-# Allow non-free components
-sed -i '/non-free$/s/# //' /etc/extrepo/config.yaml
+SUITE=$1
 
-# Install the Mobian repo
-http_proxy= extrepo enable mobian
+# Set the proper suite in our sources.list
+sed -i "s/@@SUITE@@/${SUITE}/" /etc/apt/sources.list.d/mobian.list
 
 # Setup repo priorities so mobian comes first
 cat > /etc/apt/preferences.d/00-mobian-priority << EOF
