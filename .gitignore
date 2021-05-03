@@ -1,4 +1,5 @@
 *.img*
+*.simg
 *.sqfs
 *.tar.gz
 overlays/ssh/authorized_keys

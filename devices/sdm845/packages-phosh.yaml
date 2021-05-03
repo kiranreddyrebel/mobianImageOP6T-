@@ -1,0 +1,14 @@
+{{- $architecture := or .architecture "arm64" -}}
+{{- $device := or .device "oneplus6" }}
+
+architecture: {{ $architecture }}
+
+actions:
+  - action: apt
+    recommends: false
+    description: Install device-specific packages
+    packages:
+      - {{ $device }}-support
+      - mkbootimg
+      - mobian-phosh-phone
+      - firefox-esr-mobile-config
