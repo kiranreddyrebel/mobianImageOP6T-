@@ -42,8 +42,3 @@ actions:
     recipe: devices/{{ $family }}/bootloader.yaml
     variables:
       device: {{ $device }}
-
-  - action: run
-    description: Cleanup final image
-    chroot: true
-    script: scripts/final-cleanup.sh
