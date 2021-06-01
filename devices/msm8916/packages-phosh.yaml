@@ -6,11 +6,6 @@ actions:
   - action: run
     description: Install custom packages
     chroot: true
-    command: apt-get -y install /etc/apt/packages/mobian-gt58lte-tweaks_0.1_arm64.deb
-
-  - action: run
-    description: Install custom packages
-    chroot: true
     command: apt-get -y install /etc/apt/packages/firmware-gt58lte_0.0.1_all.deb
 
   - action: run
