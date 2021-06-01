@@ -1,14 +1,17 @@
 {{- $architecture := or .architecture "arm64" -}}
-{{- $device := or .device "a5ulte" }}
 
 architecture: {{ $architecture }}
 
 actions:
+  - action: run
+    description: Install custom packages
+    chroot: true
+    command: apt-get -y install /etc/apt/packages/*.deb
+
   - action: apt
     recommends: false
     description: Install device-specific packages
     packages:
-      - {{ $device }}-support
       - mkbootimg
       - mobian-phosh-phone
       - firefox-esr-mobile-config
