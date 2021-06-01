@@ -9,6 +9,9 @@ case "${DEVICE}" in
     "a5ulte")
         VARIANTS="a5u-eur-modem"
         ;;
+    "gt58lte")
+        VARIANTS="gt58lte-modem"
+        ;;
     *)
         echo "ERROR: unsupported device ${DEVICE}"
         exit 1

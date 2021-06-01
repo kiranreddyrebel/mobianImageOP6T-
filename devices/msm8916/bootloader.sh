@@ -15,6 +15,10 @@ case "${DEVICE}" in
         DTB_VENDOR="samsung"
         DTB_VARIANTS="a5u-eur-modem"
         ;;
+    "gt58lte")
+        DTB_VENDOR="samsung"
+        DTB_VARIANTS="gt58lte-modem"
+        ;;
     *)
         echo "ERROR: unsupported device ${DEVICE}"
         exit 1
