@@ -1,0 +1,33 @@
+{{- $architecture := or .architecture "arm64" -}}
+
+architecture: {{ $architecture }}
+
+actions:
+  - action: run
+    description: Install custom packages
+    chroot: true
+    command: apt-get -y install /etc/apt/packages/firmware-gt58lte_0.0.1_all.deb
+
+  - action: run
+    description: Install custom packages
+    chroot: true
+    command: apt-get -y install /etc/apt/packages/gt58lte-support_0.1.0_arm64.deb
+
+  - action: run
+    description: Install custom packages
+    chroot: true
+    command: apt-get -y install /etc/apt/packages/linux-image-5.13-_5.13~rc3+msm8916-0.1_arm64.deb
+
+  - action: run
+    description: Correct dependencies
+    chroot: true
+    command: apt-get -y install -f
+
+  - action: apt
+    recommends: false
+    description: Install device-specific packages
+    packages:
+      - mkbootimg
+      - mobian-phosh-phone
+      - firefox-esr-mobile-config
+      - openssh-server

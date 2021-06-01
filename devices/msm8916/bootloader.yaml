@@ -1,0 +1,11 @@
+{{- $architecture := or .architecture "arm64" -}}
+{{- $device := or .device "a5ulte" }}
+{{- $image := or .image "mobian-$device" -}}
+
+architecture: {{ $architecture }}
+
+actions:
+  - action: run
+    description: Extract rootfs partition
+    postprocess: true
+    script: extract-rootfs.sh {{ $device }} {{ $image }}

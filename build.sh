@@ -64,6 +64,11 @@ case "$device" in
     family="sdm845"
     ARGS="$ARGS -t nonfree:true -t imagesize:5GB"
     ;;
+  "a5ulte" )
+    arch="arm64"
+    family="msm8916"
+    ARGS="$ARGS -t nonfree:true -t imagesize:5GB"
+    ;;
   "surfacepro3" )
     arch="amd64"
     family="amd64"
