@@ -22,8 +22,9 @@ no_blockmap=
 ssh=
 suite="bullseye"
 sign=
+miniramfs=
 
-while getopts "dDizobsS:e:f:g:h:m:p:t:u:F:" opt
+while getopts "dDizobsrS:e:f:g:h:m:p:t:u:F:" opt
 do
   case "$opt" in
     d ) use_docker=1 ;;
@@ -43,6 +44,7 @@ do
     u ) username="$OPTARG" ;;
     F ) filesystem="$OPTARG" ;;
     S ) suite="$OPTARG" ;;
+    r ) miniramfs=1 ;;
   esac
 done
 
@@ -136,6 +138,10 @@ fi
 
 if [ "$memory" ]; then
   ARGS="$ARGS --memory $memory"
+fi
+
+if [ "$miniramfs" ]; then
+  ARGS="$ARGS -t miniramfs:true"
 fi
 
 ARGS="$ARGS -t architecture:$arch -t family:$family -t device:$device \

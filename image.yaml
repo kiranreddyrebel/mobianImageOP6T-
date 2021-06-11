@@ -6,6 +6,7 @@
 {{- $environment := or .environment "phosh" -}}
 {{- $image := or .image "mobian-$device-$environment" -}}
 {{- $imagesize := or .imagesize "3.8GB" }}
+{{- $miniramfs := or .miniramfs "false" }}
 
 architecture: {{ $architecture }}
 
@@ -28,10 +29,26 @@ actions:
   - action: filesystem-deploy
     description: Deploy filesystem onto image
 
+{{ if eq $miniramfs "true" }}
+  - action: overlay
+    source: overlays/miniramfs
+    destination: usr/share/miniramfs
+
+  - action: run
+    description: Create miniramfs
+    chroot: true
+    script: scripts/create-miniramfs.sh
+
+  - action: run
+    description: Export miniramfs
+    chroot: false
+    command: cp ${ROOTDIR}/boot/miniramfs ${ARTIFACTDIR}/{{ $image }}.miniramfs
+{{ end }}
+
   - action: run
     description: Prepare bootloader
     chroot: true
-    script: devices/{{ $family }}/bootloader.sh {{ $device }}
+    script: devices/{{ $family }}/bootloader.sh {{ $device }} {{ $miniramfs }}
 
   - action: recipe
     recipe: devices/{{ $family }}/bootloader.yaml

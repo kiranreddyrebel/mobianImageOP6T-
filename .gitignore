@@ -1,4 +1,5 @@
 *.img*
+*.miniramfs
 *.sha256sums*
 *.simg
 *.sqfs
