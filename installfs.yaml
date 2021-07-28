@@ -2,13 +2,14 @@
 {{- $username := or .username "mobian" -}}
 {{- $password := or .password "1234" -}}
 {{- $hostname := or .hostname "mobian" -}}
-{{- $suite := or .suite "bullseye" -}}
+{{- $debian_suite := or .debian_suite "bullseye" -}}
+{{- $suite := or .suite $debian_suite -}}
 
 architecture: {{ $architecture }}
 
 actions:
   - action: debootstrap
-    suite: {{ $suite }}
+    suite: {{ $debian_suite }}
     components:
       - main
     mirror: http://deb.debian.org/debian
@@ -22,7 +23,7 @@ actions:
   - action: run
     description: Setup Mobian repository
     chroot: true
-    script: scripts/setup-repo.sh {{ $suite }}
+    script: scripts/setup-apt.sh {{ $debian_suite }} {{ $suite }} false false
 
   - action: apt
     recommends: false

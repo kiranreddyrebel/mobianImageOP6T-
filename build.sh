@@ -2,13 +2,16 @@
 
 export PATH=/sbin:/usr/sbin:$PATH
 DEBOS_CMD=debos
-ARGS=
+if [ -z ${ARGS+x} ]; then
+    ARGS=""
+fi
 
 device="pinephone"
 image="image"
 partitiontable="mbr"
 filesystem="f2fs"
 environment="phosh"
+hostname=
 arch=
 do_compress=
 family=
@@ -20,16 +23,19 @@ use_docker=
 username=
 no_blockmap=
 ssh=
+debian_suite="bullseye"
 suite="bullseye"
+contrib=
 sign=
 miniramfs=
 
-while getopts "dDizobsrS:e:f:g:h:m:p:t:u:F:" opt
+while getopts "dDizobsCrx:S:e:H:f:g:h:m:p:t:u:F:" opt
 do
   case "$opt" in
     d ) use_docker=1 ;;
     D ) debug=1 ;;
     e ) environment="$OPTARG" ;;
+    H ) hostname="$OPTARG" ;;
     i ) image_only=1 ;;
     z ) do_compress=1 ;;
     b ) no_blockmap=1 ;;
@@ -43,7 +49,9 @@ do
     t ) device="$OPTARG" ;;
     u ) username="$OPTARG" ;;
     F ) filesystem="$OPTARG" ;;
+    x ) debian_suite="$OPTARG" ;;
     S ) suite="$OPTARG" ;;
+    C ) contrib=1 ;;
     r ) miniramfs=1 ;;
   esac
 done
@@ -108,46 +116,23 @@ if [ "$use_docker" ]; then
             --mount type=bind,source=$(pwd),destination=/recipes \
             --security-opt label=disable godebos/debos $ARGS"
 fi
-if [ "$debug" ]; then
-  ARGS="$ARGS --debug-shell"
-fi
 
-if [ "$username" ]; then
-  ARGS="$ARGS -t username:$username"
-fi
-
-if [ "$password" ]; then
-  ARGS="$ARGS -t password:$password"
-fi
-
-if [ "$ssh" ]; then
-  ARGS="$ARGS -t ssh:$ssh"
-fi
-
-if [ "$environment" ]; then
-  ARGS="$ARGS -t environment:$environment"
-fi
-
-if [ "$http_proxy" ]; then
-  ARGS="$ARGS -e http_proxy:$http_proxy"
-fi
-
-if [ "$ftp_proxy" ]; then
-  ARGS="$ARGS -e ftp_proxy:$ftp_proxy"
-fi
-
-if [ "$memory" ]; then
-  ARGS="$ARGS --memory $memory"
-fi
-
-if [ "$miniramfs" ]; then
-  ARGS="$ARGS -t miniramfs:true"
-fi
+[ "$debug" ] && ARGS="$ARGS --debug-shell"
+[ "$username" ] && ARGS="$ARGS -t username:$username"
+[ "$password" ] && ARGS="$ARGS -t password:$password"
+[ "$ssh" ] && ARGS="$ARGS -t ssh:$ssh"
+[ "$environment" ] && ARGS="$ARGS -t environment:$environment"
+[ "$hostname" ] && ARGS="$ARGS -t hostname:$hostname"
+[ "$http_proxy" ] && ARGS="$ARGS -e http_proxy:$http_proxy"
+[ "$ftp_proxy" ] && ARGS="$ARGS -e ftp_proxy:$ftp_proxy"
+[ "$memory" ] && ARGS="$ARGS --memory $memory"
+[ "$miniramfs" ] && ARGS="$ARGS -t miniramfs:true"
+[ "$contrib" ] && ARGS="$ARGS -t contrib:true"
 
 ARGS="$ARGS -t architecture:$arch -t family:$family -t device:$device \
             -t partitiontable:$partitiontable -t filesystem:$filesystem \
             -t environment:$environment -t image:$image_file \
-            -t suite:$suite --scratchsize=8G"
+            -t debian_suite:$debian_suite -t suite:$suite --scratchsize=8G"
 
 if [ ! "$image_only" -o ! -f "$rootfs_file" ]; then
   $DEBOS_CMD $ARGS rootfs.yaml || exit 1

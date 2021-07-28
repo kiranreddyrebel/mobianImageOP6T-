@@ -3,17 +3,22 @@
 {{- $password := or .password "1234" -}}
 {{- $hostname := or .hostname "mobian" -}}
 {{- $environment := or .environment "phosh" -}}
+{{- $contrib := or .contrib "false" -}}
 {{- $nonfree := or .nonfree "false" -}}
 {{- $ssh := or .ssh "" -}}
-{{- $suite := or .suite "bullseye" -}}
+{{- $debian_suite := or .debian_suite "bullseye" -}}
+{{- $suite := or .suite $debian_suite -}}
 
 architecture: {{ $architecture }}
 
 actions:
   - action: debootstrap
-    suite: {{ $suite }}
+    suite: {{ $debian_suite }}
     components:
       - main
+{{ if eq $contrib "true" }}
+      - contrib
+{{ end }}
 {{ if eq $nonfree "true" }}
       - non-free
 {{ end }}
@@ -28,7 +33,7 @@ actions:
   - action: run
     description: Setup Mobian repository
     chroot: true
-    script: scripts/setup-repo.sh {{ $suite }} {{ $nonfree }}
+    script: scripts/setup-apt.sh {{ $debian_suite }} {{ $suite }} {{ $contrib }} {{ $nonfree }}
 
   - action: recipe
     recipe: include/packages-{{ $environment }}.yaml
