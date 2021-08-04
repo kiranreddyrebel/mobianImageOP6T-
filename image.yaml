@@ -7,6 +7,7 @@
 {{- $image := or .image "mobian-$device-$environment" -}}
 {{- $imagesize := or .imagesize "3.8GB" }}
 {{- $miniramfs := or .miniramfs "false" }}
+{{- $zram := or .zram "false" -}}
 
 architecture: {{ $architecture }}
 
@@ -28,6 +29,13 @@ actions:
 
   - action: filesystem-deploy
     description: Deploy filesystem onto image
+
+{{ if eq $zram "true" }}
+  - action: run
+    description: setup zram (fstab)
+    chroot: true
+    script: scripts/setup-zram-mounts.sh
+{{ end }}
 
 {{ if eq $miniramfs "true" }}
   - action: overlay

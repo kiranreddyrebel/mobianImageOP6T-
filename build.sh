@@ -17,6 +17,7 @@ do_compress=
 family=
 image_only=
 installer=
+zram=
 memory=
 password=
 use_docker=
@@ -29,7 +30,7 @@ contrib=
 sign=
 miniramfs=
 
-while getopts "dDizobsCrx:S:e:H:f:g:h:m:p:t:u:F:" opt
+while getopts "dDizobsZCrx:S:e:H:f:g:h:m:p:t:u:F:" opt
 do
   case "$opt" in
     d ) use_docker=1 ;;
@@ -41,6 +42,7 @@ do
     b ) no_blockmap=1 ;;
     s ) ssh=1 ;;
     o ) installer=1 ;;
+    Z ) zram=1 ;;
     f ) ftp_proxy="$OPTARG" ;;
     h ) http_proxy="$OPTARG" ;;
     g ) sign="$OPTARG" ;;
@@ -128,6 +130,7 @@ fi
 [ "$memory" ] && ARGS="$ARGS --memory $memory"
 [ "$miniramfs" ] && ARGS="$ARGS -t miniramfs:true"
 [ "$contrib" ] && ARGS="$ARGS -t contrib:true"
+[ "$zram" ] && ARGS="$ARGS -t zram:true"
 
 ARGS="$ARGS -t architecture:$arch -t family:$family -t device:$device \
             -t partitiontable:$partitiontable -t filesystem:$filesystem \

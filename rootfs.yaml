@@ -6,6 +6,7 @@
 {{- $contrib := or .contrib "false" -}}
 {{- $nonfree := or .nonfree "false" -}}
 {{- $ssh := or .ssh "" -}}
+{{- $zram:= or .zram "false" -}}
 {{- $debian_suite := or .debian_suite "bullseye" -}}
 {{- $suite := or .suite $debian_suite -}}
 
@@ -60,6 +61,13 @@ actions:
     description: Set owner of .ssh
     chroot: true
     command: chown -R {{ $username }}:{{ $username }} /home/{{ $username }}/.ssh/
+{{ end }}
+
+{{ if eq $zram "true" }}
+  - action: overlay
+    description: setup zram devices
+    source: overlays/zram/
+    destination: /etc/
 {{ end }}
 
   - action: run
