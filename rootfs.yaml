@@ -7,7 +7,7 @@
 {{- $nonfree := or .nonfree "false" -}}
 {{- $ssh := or .ssh "" -}}
 {{- $zram:= or .zram "false" -}}
-{{- $debian_suite := or .debian_suite "bullseye" -}}
+{{- $debian_suite := or .debian_suite "bookworm" -}}
 {{- $suite := or .suite $debian_suite -}}
 
 architecture: {{ $architecture }}

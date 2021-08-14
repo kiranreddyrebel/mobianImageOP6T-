@@ -2,7 +2,7 @@
 {{- $username := or .username "mobian" -}}
 {{- $password := or .password "1234" -}}
 {{- $hostname := or .hostname "mobian" -}}
-{{- $debian_suite := or .debian_suite "bullseye" -}}
+{{- $debian_suite := or .debian_suite "bookworm" -}}
 {{- $suite := or .suite $debian_suite -}}
 
 architecture: {{ $architecture }}

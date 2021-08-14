@@ -12,7 +12,6 @@ actions:
 {{ if eq $device "pinephone" }}
       - mobian-phosh-phone
       - firefox-esr-mobile-config
-      - flashlight
 {{ end }}
       - megapixels
       - powersupply
