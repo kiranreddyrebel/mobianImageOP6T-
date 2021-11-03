@@ -1,0 +1,167 @@
+include:
+  - .gitlab-ci/job-definitions.yml
+  - .gitlab-ci/global-declarations.yml
+  - .gitlab-ci/devices.yml
+
+rootfs-amd64-phosh:
+  extends:
+    - .rootfs-generic
+    - .arch-amd64
+    - .shell-phosh
+
+rootfs-arm64-phosh:
+  extends:
+    - .rootfs-generic
+    - .arch-arm64
+    - .shell-phosh
+
+installfs-arm64:
+  extends:
+    - .rootfs-installer
+    - .arch-arm64
+
+devicefs-pinephone-phosh:
+  extends:
+    - .devicefs
+    - .device-pinephone
+    - .shell-phosh
+  needs:
+    - rootfs-arm64-phosh
+
+devicefs-pinetab-phosh:
+  extends:
+    - .devicefs
+    - .device-pinetab
+    - .shell-phosh
+  needs:
+    - rootfs-arm64-phosh
+
+devicefs-librem5-phosh:
+  extends:
+    - .devicefs
+    - .device-librem5
+    - .shell-phosh
+  needs:
+    - rootfs-arm64-phosh
+
+devicefs-oneplus6-phosh:
+  extends:
+    - .devicefs
+    - .device-oneplus6
+    - .shell-phosh
+  needs:
+    - rootfs-arm64-phosh
+
+devicefs-pocof1-phosh:
+  extends:
+    - .devicefs
+    - .device-pocof1
+    - .shell-phosh
+  needs:
+    - rootfs-arm64-phosh
+
+devicefs-surfacepro3-phosh:
+  extends:
+    - .devicefs
+    - .device-surfacepro3
+    - .shell-phosh
+  needs:
+    - rootfs-amd64-phosh
+
+devicefs-amd64-uefi-phosh:
+  extends:
+    - .devicefs
+    - .device-amd64-uefi
+    - .shell-phosh
+  needs:
+    - rootfs-amd64-phosh
+
+devicefs-amd64-pc-phosh:
+  extends:
+    - .devicefs
+    - .device-amd64-pc
+    - .shell-phosh
+  needs:
+    - rootfs-amd64-phosh
+
+image-pinephone-phosh:
+  extends:
+    - .image
+    - .device-pinephone
+    - .shell-phosh
+  needs:
+    - devicefs-pinephone-phosh
+
+image-pinetab-phosh:
+  extends:
+    - .image
+    - .device-pinetab
+    - .shell-phosh
+  needs:
+    - devicefs-pinetab-phosh
+
+image-librem5-phosh:
+  extends:
+    - .image
+    - .device-librem5
+    - .shell-phosh
+  needs:
+    - devicefs-librem5-phosh
+
+image-oneplus6-phosh:
+  extends:
+    - .image
+    - .device-oneplus6
+    - .shell-phosh
+  needs:
+    - devicefs-oneplus6-phosh
+
+image-pocof1-phosh:
+  extends:
+    - .image
+    - .device-pocof1
+    - .shell-phosh
+  needs:
+    - devicefs-pocof1-phosh
+
+image-surfacepro3-phosh:
+  extends:
+    - .image
+    - .device-surfacepro3
+    - .shell-phosh
+  needs:
+    - devicefs-surfacepro3-phosh
+
+image-amd64-uefi-phosh:
+  extends:
+    - .image
+    - .device-amd64-uefi
+    - .shell-phosh
+  needs:
+    - devicefs-amd64-uefi-phosh
+
+image-amd64-pc-phosh:
+  extends:
+    - .image
+    - .device-amd64-pc
+    - .shell-phosh
+  needs:
+    - devicefs-amd64-pc-phosh
+
+installer-pinephone-phosh:
+  extends:
+    - .installer
+    - .device-pinephone
+    - .shell-phosh
+  needs:
+    - installfs-arm64
+    - devicefs-pinephone-phosh
+
+installer-pinetab-phosh:
+  extends:
+    - .installer
+    - .device-pinetab
+    - .shell-phosh
+  needs:
+    - installfs-arm64
+    - devicefs-pinetab-phosh
