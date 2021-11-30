@@ -2,7 +2,7 @@
 {{- $family := or .family "sunxi" }}
 {{- $device := or .device "pinephone" }}
 {{- $partitiontable := or .partitiontable "mbr" }}
-{{- $filesystem := or .filesystem "f2fs" }}
+{{- $filesystem := or .filesystem "ext4" }}
 {{- $environment := or .environment "phosh" -}}
 {{- $image := or .image "mobian" -}}
 {{- $imagesize := or .imagesize "3.8GB" }}

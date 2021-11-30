@@ -19,7 +19,7 @@ default:
 variables:
   DEBIAN_SUITE: "bookworm"
   MOBIAN_SUITE: "bookworm"
-  MOBIAN_FILESYSTEM: "f2fs"
+  MOBIAN_FILESYSTEM: "ext4"
   MOBIAN_IMAGE_SIZE: "6GB"
   MOBIAN_INCLUDE_NONFREE: "false"
   MOBIAN_PARTITION_TABLE: "mbr"

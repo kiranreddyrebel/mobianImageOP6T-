@@ -9,7 +9,7 @@ fi
 device="pinephone"
 image="image"
 partitiontable="mbr"
-filesystem="f2fs"
+filesystem="ext4"
 environment="phosh"
 hostname=
 arch=

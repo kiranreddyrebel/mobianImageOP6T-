@@ -3,7 +3,7 @@
 DEVICE="$1"
 OFFSET=0
 
-ROOTPART=$(grep f2fs /etc/fstab | awk '{ print $1; }')
+ROOTPART=$(grep -vE '^#' /etc/fstab | grep -E '[[:space:]]/[[:space:]]' | awk '{ print $1; }')
 KERNEL_VERSION=$(linux-version list)
 
 # Update the initramfs to make sure it's up-to-date
