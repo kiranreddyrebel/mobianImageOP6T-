@@ -16,6 +16,9 @@ actions:
     source: rootfs-{{ $device }}-{{ $environment }}.sqfs
     destination: /var/lib/rootfs.sqfs
 
+  - action: overlay
+    source: overlays/installer
+
   - action: recipe
     recipe: include/partition-{{ $partitiontable }}.yaml
     variables:
