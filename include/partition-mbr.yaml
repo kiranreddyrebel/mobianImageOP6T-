@@ -2,6 +2,7 @@
 {{- $filesystem := or .filesystem "ext4" }}
 {{- $image := or .image "mobian-$device" -}}
 {{- $imagesize := or .imagesize "3.8GB" }}
+{{- $bootstart := or .bootstart "8MiB" }}
 {{- $rootstart := or .rootstart "512MiB" }}
 
 architecture: {{ $architecture }}
@@ -23,7 +24,7 @@ actions:
     partitions:
       - name: boot
         fs: ext4
-        start: 8MiB
+        start: {{ $bootstart }}
         end: 512MiB
         flags: [ boot ]
       - name: rootfs

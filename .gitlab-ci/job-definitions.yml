@@ -49,7 +49,7 @@ cleanup-artifacts-dir:
 .rootfs-generic:
   stage: rootfs
   script:
-    - MOBIAN_ARTIFACTS="rootfs-${ARCH}-${MOBIAN_GRAPHICAL_SHELL}.tar.gz"
+    - MOBIAN_ARTIFACTS="rootfs-${ARCH}-${MOBIAN_GRAPHICAL_SHELL}-${MOBIAN_SUITE}.tar.gz"
     - debos --scratchsize=8G
       -t architecture:${ARCH}
       -t environment:${MOBIAN_GRAPHICAL_SHELL}
@@ -72,7 +72,7 @@ cleanup-artifacts-dir:
 .devicefs:
   stage: devicefs
   script:
-    - MOBIAN_ARTIFACTS="rootfs-${ARCH}-${MOBIAN_GRAPHICAL_SHELL}.tar.gz"
+    - MOBIAN_ARTIFACTS="rootfs-${ARCH}-${MOBIAN_GRAPHICAL_SHELL}-${MOBIAN_SUITE}.tar.gz"
     - *restore-artifacts
     - debos --scratchsize=8G
       -t architecture:${ARCH}
@@ -107,6 +107,7 @@ cleanup-artifacts-dir:
       -t image:${IMAGE_NAME}
       -t imagesize:${MOBIAN_IMAGE_SIZE}
       -t partitiontable:${MOBIAN_PARTITION_TABLE}
+      -t bootstart:${MOBIAN_BOOT_PARTITION_START}
       image.yaml
     - *finish-images
     - *sign-images
@@ -127,6 +128,7 @@ cleanup-artifacts-dir:
       -t filesystem:${MOBIAN_FILESYSTEM}
       -t image:${IMAGE_NAME}
       -t partitiontable:${MOBIAN_PARTITION_TABLE}
+      -t bootstart:${MOBIAN_BOOT_PARTITION_START}
       installer.yaml
     - *finish-images
     - *sign-images

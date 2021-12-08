@@ -2,6 +2,7 @@
 {{- $filesystem := or .filesystem "ext4" }}
 {{- $image := or .image "mobian-$device" -}}
 {{- $imagesize := or .imagesize "3.8GB" }}
+{{- $bootstart := or .bootstart "0%" }}
 {{- $rootstart := or .rootstart "768MiB" }}
 
 architecture: {{ $architecture }}
@@ -25,7 +26,7 @@ actions:
     partitions:
       - name: esp
         fs: fat32
-        start: 0%
+        start: {{ $bootstart }}
         end: 256MiB
         flags: [ esp, boot ]
       - name: boot

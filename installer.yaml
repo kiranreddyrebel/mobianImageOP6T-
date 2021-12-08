@@ -5,6 +5,7 @@
 {{- $filesystem := or .filesystem "ext4" }}
 {{- $environment := or .environment "phosh" -}}
 {{- $image := or .image "mobian-installer.img" -}}
+{{- $bootstart := or .bootstart "8MiB" }}
 
 architecture: {{ $architecture }}
 
@@ -23,6 +24,7 @@ actions:
       image: {{ $image }}
       imagesize: 8GB
       rootstart: 4GiB
+      bootstart: {{ $bootstart }}
 
   - action: filesystem-deploy
     description: Deploy filesystem onto image

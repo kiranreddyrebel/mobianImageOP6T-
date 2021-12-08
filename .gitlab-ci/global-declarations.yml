@@ -19,6 +19,7 @@ default:
 variables:
   DEBIAN_SUITE: "bookworm"
   MOBIAN_SUITE: "bookworm"
+  MOBIAN_BOOT_PARTITION_START: "8MiB"
   MOBIAN_FILESYSTEM: "ext4"
   MOBIAN_IMAGE_SIZE: "6GB"
   MOBIAN_INCLUDE_NONFREE: "false"

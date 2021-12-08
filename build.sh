@@ -63,6 +63,12 @@ case "$device" in
     arch="arm64"
     family="sunxi"
     ;;
+  "pinephonepro" )
+    arch="arm64"
+    family="rockchip"
+    suite="unstable"
+    ARGS="$ARGS -t nonfree:true -t bootstart:16MiB"
+    ;;
   "pinetab" )
     arch="arm64"
     family="sunxi"
