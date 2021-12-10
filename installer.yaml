@@ -1,5 +1,6 @@
 {{- $architecture := or .architecture "arm64" -}}
 {{- $family := or .family "sunxi" }}
+{{- $nonfree := or .nonfree "false" -}}
 {{- $device := or .device "pinephone" }}
 {{- $partitiontable := or .partitiontable "mbr" }}
 {{- $filesystem := or .filesystem "ext4" }}
@@ -28,6 +29,13 @@ actions:
 
   - action: filesystem-deploy
     description: Deploy filesystem onto image
+
+{{ if eq $nonfree "true" }}
+  - action: run
+    description: Enable non-free Debian repo
+    chroot: true
+    command: sed -i 's/main$/main non-free/g' /etc/apt/sources.list
+{{ end }}
 
   - action: apt
     recommends: false
