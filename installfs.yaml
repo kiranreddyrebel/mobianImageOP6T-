@@ -4,6 +4,7 @@
 {{- $hostname := or .hostname "mobian" -}}
 {{- $debian_suite := or .debian_suite "bookworm" -}}
 {{- $suite := or .suite $debian_suite -}}
+{{- $installfs := or .installfs "installfs.tar.gz" }}
 
 architecture: {{ $architecture }}
 
@@ -53,4 +54,4 @@ actions:
     script: scripts/setup-installer.sh {{ $username }}
 
   - action: pack
-    file: installfs-{{ $architecture }}.tar.gz
+    file: {{ $installfs }}

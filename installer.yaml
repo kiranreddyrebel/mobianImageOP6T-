@@ -6,13 +6,14 @@
 {{- $filesystem := or .filesystem "ext4" }}
 {{- $environment := or .environment "phosh" -}}
 {{- $image := or .image "mobian-installer.img" -}}
+{{- $installfs := or .installfs "installfs.tar.gz" }}
 {{- $bootstart := or .bootstart "8MiB" }}
 
 architecture: {{ $architecture }}
 
 actions:
   - action: unpack
-    file: installfs-{{ $architecture }}.tar.gz
+    file: {{ $installfs }}
 
   - action: overlay
     source: rootfs-{{ $device }}-{{ $environment }}.sqfs

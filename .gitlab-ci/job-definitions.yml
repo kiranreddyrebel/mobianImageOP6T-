@@ -63,10 +63,12 @@ cleanup-artifacts-dir:
 .rootfs-installer:
   stage: rootfs
   script:
+    - MOBIAN_ARTIFACTS="installfs-${ARCH}-${MOBIAN_SUITE}.tar.gz"
     - debos --scratchsize=8G
       -t architecture:${ARCH}
+      -t suite:${MOBIAN_SUITE}
+      -t installfs:${MOBIAN_ARTIFACTS}
       installfs.yaml
-    - MOBIAN_ARTIFACTS="installfs-${ARCH}.tar.gz"
     - *save-artifacts
 
 .devicefs:
@@ -116,7 +118,8 @@ cleanup-artifacts-dir:
 .installer:
   stage: installer
   script:
-    - MOBIAN_ARTIFACTS="rootfs-${MOBIAN_DEVICE_NAME}-${MOBIAN_GRAPHICAL_SHELL}.tar.gz installfs-${ARCH}.tar.gz"
+    - INSTALLFS_NAME="installfs-${ARCH}-${MOBIAN_SUITE}.tar.gz"
+    - MOBIAN_ARTIFACTS="rootfs-${MOBIAN_DEVICE_NAME}-${MOBIAN_GRAPHICAL_SHELL}.tar.gz ${INSTALLFS_NAME}"
     - *restore-artifacts
     - IMAGE_NAME=mobian-installer-${MOBIAN_DEVICE_NAME}-${MOBIAN_GRAPHICAL_SHELL}-$(date --date="${CI_PIPELINE_CREATED_AT}" +%Y%m%d)
     - zcat "rootfs-${MOBIAN_DEVICE_NAME}-${MOBIAN_GRAPHICAL_SHELL}.tar.gz" | tar2sqfs "rootfs-${MOBIAN_DEVICE_NAME}-${MOBIAN_GRAPHICAL_SHELL}.sqfs" > /dev/null 2>&1
@@ -125,8 +128,10 @@ cleanup-artifacts-dir:
       -t environment:${MOBIAN_GRAPHICAL_SHELL}
       -t device:${MOBIAN_DEVICE_NAME}
       -t family:${MOBIAN_DEVICE_FAMILY}
+      -t nonfree:${MOBIAN_INCLUDE_NONFREE}
       -t filesystem:${MOBIAN_FILESYSTEM}
       -t image:${IMAGE_NAME}
+      -t installfs:${INSTALLFS_NAME}
       -t partitiontable:${MOBIAN_PARTITION_TABLE}
       -t bootstart:${MOBIAN_BOOT_PARTITION_START}
       installer.yaml

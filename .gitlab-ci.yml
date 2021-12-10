@@ -28,6 +28,13 @@ installfs-arm64:
     - .rootfs-installer
     - .arch-arm64
 
+installfs-arm64-unstable:
+  variables:
+    MOBIAN_SUITE: "unstable"
+  extends:
+    - .rootfs-installer
+    - .arch-arm64
+
 devicefs-pinephone-phosh:
   extends:
     - .devicefs
@@ -180,6 +187,15 @@ installer-pinephone-phosh:
   needs:
     - installfs-arm64
     - devicefs-pinephone-phosh
+
+installer-pinephonepro-phosh:
+  extends:
+    - .installer
+    - .device-pinephonepro
+    - .shell-phosh
+  needs:
+    - installfs-arm64-unstable
+    - devicefs-pinephonepro-phosh
 
 installer-pinetab-phosh:
   extends:
