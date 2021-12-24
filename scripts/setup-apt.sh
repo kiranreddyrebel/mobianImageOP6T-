@@ -22,8 +22,4 @@ cat > /etc/apt/preferences.d/00-mobian-priority << EOF
 Package: *
 Pin: release o=Mobian
 Pin-Priority: 700
-
-Package: *
-Pin: release o=Debian
-Pin-Priority: 500
 EOF
