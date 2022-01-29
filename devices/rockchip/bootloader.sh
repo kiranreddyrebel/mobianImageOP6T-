@@ -5,10 +5,13 @@ set -e
 DEVICE="$1"
 
 case "$DEVICE" in
-    "pinephonepro") 
+    "pinephonepro")
         BOARD="pinephone-pro-rk3399"
         ;;
-    *) 
+    "rockpro64")
+        BOARD="rockpro64-rk3399"
+        ;;
+    *)
         echo "Unknown device $DEVICE"
         exit 1
         ;;
