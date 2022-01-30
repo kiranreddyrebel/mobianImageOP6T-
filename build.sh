@@ -159,23 +159,30 @@ if [ "$use_docker" ]; then
 fi
 
 [ "$debug"       ] && ARGS="$ARGS --debug-shell"
-[ "$username"    ] && ARGS="$ARGS -t username:$username"
-[ "$password"    ] && ARGS="$ARGS -t password:$password"
-[ "$ssh"         ] && ARGS="$ARGS -t ssh:$ssh"
-[ "$environment" ] && ARGS="$ARGS -t environment:$environment"
-[ "$hostname"    ] && ARGS="$ARGS -t hostname:$hostname"
-[ "$http_proxy"  ] && ARGS="$ARGS -e http_proxy:$http_proxy"
-[ "$ftp_proxy"   ] && ARGS="$ARGS -e ftp_proxy:$ftp_proxy"
 [ "$memory"      ] && ARGS="$ARGS --memory $memory"
-[ "$miniramfs"   ] && ARGS="$ARGS -t miniramfs:true"
-[ "$contrib"     ] && ARGS="$ARGS -t contrib:true"
-[ "$zram"        ] && ARGS="$ARGS -t zram:true"
+[ "$http_proxy"  ] && ARGS="$ARGS -e  http_proxy:$http_proxy"
+[ "$ftp_proxy"   ] && ARGS="$ARGS -e   ftp_proxy:$ftp_proxy"
+[ "$username"    ] && ARGS="$ARGS -t    username:$username"
+[ "$password"    ] && ARGS="$ARGS -t    password:$password"
+[ "$ssh"         ] && ARGS="$ARGS -t         ssh:$ssh"
+[ "$environment" ] && ARGS="$ARGS -t environment:$environment"
+[ "$hostname"    ] && ARGS="$ARGS -t    hostname:$hostname"
+[ "$miniramfs"   ] && ARGS="$ARGS -t   miniramfs:true"
+[ "$contrib"     ] && ARGS="$ARGS -t     contrib:true"
+[ "$zram"        ] && ARGS="$ARGS -t        zram:true"
 
-ARGS="$ARGS -t architecture:$arch -t family:$family -t device:$device \
-            -t partitiontable:$partitiontable -t filesystem:$filesystem \
-            -t environment:$environment -t image:$image_file -t rootfs:$rootfs_file \
-            -t debian_suite:$debian_suite -t suite:$suite --scratchsize=8G \
-            -t installfs:$installfs_file"
+ARGS="$ARGS \
+-t   architecture:$arch \
+-t         family:$family \
+-t         device:$device \
+-t partitiontable:$partitiontable \
+-t     filesystem:$filesystem  \
+-t   debian_suite:$debian_suite \
+-t          suite:$suite \
+-t          image:$image_file \
+-t         rootfs:$rootfs_file \
+-t      installfs:$installfs_file \
+--scratchsize=8G"
 
 if [ ! "$image_only" -o ! -f "$rootfs_file" ]; then
   $DEBOS_CMD $ARGS rootfs.yaml || exit 1
