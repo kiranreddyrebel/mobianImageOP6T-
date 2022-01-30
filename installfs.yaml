@@ -2,6 +2,8 @@
 {{- $username := or .username "mobian" -}}
 {{- $password := or .password "1234" -}}
 {{- $hostname := or .hostname "mobian" -}}
+{{- $contrib := or .contrib "false" -}}
+{{- $nonfree := or .nonfree "false" -}}
 {{- $debian_suite := or .debian_suite "bookworm" -}}
 {{- $suite := or .suite $debian_suite -}}
 {{- $installfs := or .installfs "installfs.tar.gz" }}
@@ -13,6 +15,12 @@ actions:
     suite: {{ $debian_suite }}
     components:
       - main
+{{ if eq $contrib "true" }}
+      - contrib
+{{ end }}
+{{ if eq $nonfree "true" }}
+      - non-free
+{{ end }}
     mirror: http://deb.debian.org/debian
     variant: minbase
 
