@@ -7,6 +7,7 @@
 {{- $environment := or .environment "phosh" -}}
 {{- $image := or .image "mobian-installer.img" -}}
 {{- $installfs := or .installfs "installfs.tar.gz" }}
+{{- $rootfs_device := or .rootfs_device "rootfs-$device-$environment" }}
 {{- $bootstart := or .bootstart "8MiB" }}
 
 architecture: {{ $architecture }}
@@ -16,7 +17,7 @@ actions:
     file: {{ $installfs }}
 
   - action: overlay
-    source: rootfs-{{ $device }}-{{ $environment }}.sqfs
+    source: {{ $rootfs_device }}.sqfs
     destination: /var/lib/rootfs.sqfs
 
   - action: recipe

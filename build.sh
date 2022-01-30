@@ -111,7 +111,8 @@ esac
 file_date=`date +%Y%m%d`
 
 installfs_file="installfs-$arch-$file_date.tar.gz"
-rootfs_device_file="rootfs-$device-$environment-$file_date.tar.gz"
+rootfs_device_base="rootfs-$device-$environment-$file_date"
+rootfs_device_file="$rootfs_device_base.tar.gz"
 
 image_file_base="mobian-$device-$environment-$file_date"
 if [ "$installer" ]; then
@@ -148,7 +149,7 @@ ARGS="$ARGS -t architecture:$arch -t family:$family -t device:$device \
             -t partitiontable:$partitiontable -t filesystem:$filesystem \
             -t environment:$environment -t image:$image_file_base -t rootfs:$rootfs_file \
             -t debian_suite:$debian_suite -t suite:$suite --scratchsize=8G \
-            -t installfs:$installfs_file"
+            -t installfs:$installfs_file -t rootfs_device:$rootfs_device_base"
 
 if [ ! "$image_only" -o ! -f "$rootfs_file" ]; then
   $DEBOS_CMD $ARGS rootfs.yaml || exit 1
@@ -158,10 +159,10 @@ if [ ! "$image_only" -o ! -f "$rootfs_file" ]; then
 fi
 
 if [ ! "$image_only" -o ! -f "$rootfs_device_file" ]; then
-  $DEBOS_CMD $ARGS "rootfs-device.yaml" || exit 1
+  $DEBOS_CMD $ARGS rootfs-device.yaml || exit 1
 fi
 
-rootfs_device_sqfs="rootfs-$device-$environment-$file_date.sqfs"
+rootfs_device_sqfs="$rootfs_device_base.sqfs"
 # Convert rootfs tarball to squashfs for inclusion in the installer image
 if [ "$installer" -a ! -f "$rootfs_device_sqfs" ]; then
   zcat "$rootfs_device_file" | tar2sqfs "$rootfs_device_sqfs"

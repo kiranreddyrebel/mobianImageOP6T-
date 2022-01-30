@@ -4,6 +4,7 @@
 {{- $device := or .device "pinephone" }}
 {{- $environment := or .environment "phosh" -}}
 {{- $rootfs := or .rootfs "rootfs.tar.gz" }}
+{{- $rootfs_device := or .rootfs_device "rootfs-$device-$environment" }}
 
 architecture: {{ $architecture }}
 
@@ -29,4 +30,4 @@ actions:
     script: scripts/rootfs-cleanup.sh
 
   - action: pack
-    file: rootfs-{{ $device }}-{{ $environment }}.tar.gz
+    file: {{ $rootfs_device }}.tar.gz
