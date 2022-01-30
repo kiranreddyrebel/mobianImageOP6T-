@@ -108,11 +108,14 @@ case "$device" in
     ;;
 esac
 
-file_date=`date +%Y%m%d`
+compress_suffix=
+[ "$do_compress" ] && compress_suffix='.gz'
 
-installfs_file="installfs-$arch-$file_date.tar.gz"
+file_date=$(date +%Y%m%d)
+
+installfs_file="installfs-$arch-$file_date.tar$compress_suffix"
 rootfs_device_base="rootfs-$device-$environment-$file_date"
-rootfs_device_file="$rootfs_device_base.tar.gz"
+rootfs_device_file="$rootfs_device_base.tar$compress_suffix"
 
 image_file_base="mobian-$device-$environment-$file_date"
 if [ "$installer" ]; then
@@ -120,9 +123,9 @@ if [ "$installer" ]; then
   image_file_base="mobian-installer-$device-$environment-$file_date"
 fi
 
-rootfs_file="rootfs-$arch-$environment-$file_date.tar.gz"
+rootfs_file="rootfs-$arch-$environment-$file_date.tar$compress_suffix"
 if echo $ARGS | grep -q "nonfree:true"; then
-  rootfs_file="rootfs-$arch-$environment-nonfree-$file_date.tar.gz"
+  rootfs_file="rootfs-$arch-$environment-nonfree-$file_date.tar$compress_suffix"
 fi
 
 if [ "$use_docker" ]; then
@@ -149,7 +152,7 @@ ARGS="$ARGS -t architecture:$arch -t family:$family -t device:$device \
             -t partitiontable:$partitiontable -t filesystem:$filesystem \
             -t environment:$environment -t image:$image_file_base -t rootfs:$rootfs_file \
             -t debian_suite:$debian_suite -t suite:$suite --scratchsize=8G \
-            -t installfs:$installfs_file -t rootfs_device:$rootfs_device_base"
+            -t installfs:$installfs_file -t rootfs_device:$rootfs_device_base -t do_compress:$do_compress"
 
 if [ ! "$image_only" -o ! -f "$rootfs_file" ]; then
   $DEBOS_CMD $ARGS rootfs.yaml || exit 1
