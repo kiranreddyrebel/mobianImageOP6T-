@@ -14,8 +14,14 @@
 architecture: {{ $architecture }}
 
 actions:
+  # silence debootstrap warning
+  - action: run
+    description: "Debootstrap Debian {{ $debian_suite }} minbase, contrib: {{ $contrib }}, nonfree: {{ $nonfree }}"
+    command: mkdir -p /etc/apt/apt.conf.d/
   - action: debootstrap
     suite: {{ $debian_suite }}
+    mirror: http://deb.debian.org/debian
+    variant: minbase
     components:
       - main
 {{ if eq $contrib "true" }}
@@ -24,16 +30,12 @@ actions:
 {{ if eq $nonfree "true" }}
       - non-free
 {{ end }}
-    mirror: http://deb.debian.org/debian
-    variant: minbase
 
   - action: overlay
-    description: Enable Mobian repository, local debs
+    description: Setup Mobian apt repository and install local debs
     source: overlays/apt/
     destination: /
-
   - action: run
-    description: Setup Mobian repository, Install local debs
     chroot: true
     script: scripts/setup-apt.sh {{ $debian_suite }} {{ $suite }} {{ $contrib }} {{ $nonfree }} "rootfs*.deb"
 
@@ -49,13 +51,13 @@ actions:
 
 {{ if $ssh }}
   - action: overlay
-    description: Set up sshd configuration
-    source: overlays/sshd_config.d/
-    destination: /etc/ssh/sshd_config.d/
+    description: Setup openssh-server configuration
+    source: overlays/openssh-server
+    destination: /
 
   - action: overlay
-    description: Set up user's ssh configuration
-    source: overlays/ssh/
+    description: Setup user's ssh configuration
+    source: overlays/user-ssh/
     destination: /home/{{ $username }}/.ssh/
 
   - action: run
