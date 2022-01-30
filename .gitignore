@@ -4,4 +4,5 @@
 *.simg
 *.sqfs
 *.tar.gz
+*.deb
 overlays/ssh/authorized_keys

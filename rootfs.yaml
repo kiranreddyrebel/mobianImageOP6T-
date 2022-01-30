@@ -28,14 +28,14 @@ actions:
     variant: minbase
 
   - action: overlay
-    description: Enable Mobian repository
+    description: Enable Mobian repository, local debs
     source: overlays/apt/
-    destination: /etc/apt/
+    destination: /
 
   - action: run
-    description: Setup Mobian repository
+    description: Setup Mobian repository, Install local debs
     chroot: true
-    script: scripts/setup-apt.sh {{ $debian_suite }} {{ $suite }} {{ $contrib }} {{ $nonfree }}
+    script: scripts/setup-apt.sh {{ $debian_suite }} {{ $suite }} {{ $contrib }} {{ $nonfree }} "rootfs*.deb"
 
   - action: recipe
     recipe: include/packages-{{ $environment }}.yaml
