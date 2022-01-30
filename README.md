@@ -1,30 +1,33 @@
 # mobian-recipes
 
-A set of [debos](https://github.com/go-debos/debos) recipes for building a
-debian-based image for mobile phones, initially targetting Pine64's PinePhone.
+A build script over a set of [debos/Debian OS builder](https://github.com/go-debos/debos) recipes for building a
+Debian-based image for mobile devices, initially targetting PINE64's PinePhone. There is support now for PinePhone Pro,
+Purism's Librem5, UEFI x86_64, OnePlus 6 and xiaomi pocof1 devices, and more.
 
-Prebuilt images are available [here](http://images.mobian-project.org/).
+Automated image builds are distributed and available [here](https://images.mobian-project.org/).
 
 The default user is `mobian` with password `1234`.
 
+**[The Developer's Guide page on the Wiki](https://gitlab.com/mobian1/wiki/-/wikis/Developer's-Guide) is a good place find more information.**
+
 ## Build
 
-To build the image, you need to have `debos` and `bmaptool`. On a debian-based
-system, install these dependencies by typing the following command in a terminal:
+### Prerequisites, Notes
+
+Prerequisites to building the image are [`debos`](https://github.com/go-debos/debos#synopsis), and (optionally)
+[`bmaptool`](https://github.com/intel/bmap-tools#usage) and `squashfs-tools-ng`/`tar2sqfs`(for installer image).
+
+On a Debian-based host, this command will satisfy the prerequisites; in a terminal:
 
 ```
-sudo apt install debos bmap-tools f2fs-tools
+sudo su -c "apt install debos bmap-tools squashfs-tools-ng"
 ```
 
-Do note that the debos provided in Debian 10 (Buster) is not new enough
+__Do note__ that the debos provided in Debian 10 (Buster) is not new enough
 (it will error out with "Unknown action: recipe"), the one in Debian
 Bullseye works.
-If you want to build with EXT4 filesystem f2fs-tools is not required.
 
-The build system will cache and re-use it's output files. To create a fresh build
-remove `*.tar.gz`, `*.sqfs` and `*.img` before starting the build.
-
-If your system isn't debian-based (or if you choose to install `debos` without
+If your system isn't Debian-based (or if you choose to install `debos` without
 using `apt`, which is a terrible idea), please make sure you also install the
 following required packages:
 - `debootstrap`
@@ -33,9 +36,10 @@ following required packages:
 - `binfmt-support`
 - `squashfs-tools-ng` (only required for generating installer images)
 
-Then simply browse to the `mobian-recipes` folder and execute `./build.sh`.
+The build system will cache and re-use it's output files. To create a fresh build
+remove `*.tar.gz`, `*.sqfs` and `*.img` before starting the build.
 
-You can use `./build.sh -d` to use the docker version of `debos`.
+You can use `./build.sh -d` to execute `debos` via Docker, and full usage help is available via `./build.sh -?`.
 
 ### Building QEMU image
 
@@ -64,13 +68,13 @@ qemu-img resize -f qcow2 <qcow_image.qcow2> +20G
 Insert a MicroSD card into your computer, and type the following command:
 
 ```
-sudo bmaptool copy <image> /dev/<sdcard>
+sudo su -c "bmaptool copy $(pwd)/<image> /dev/<sdcard>"
 ```
 
 or:
 
 ```
-sudo dd if=<image> of=/dev/<sdcard> bs=1M
+sudo su -c "dd if=$(pwd)/<image> of=/dev/<sdcard> bs=1M"
 ```
 
 *Note: Make sure to use your actual SD card device, such as `mmcblk0` instead of
