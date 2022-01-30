@@ -6,23 +6,24 @@ usage() {
     echo "  -D               debug mode; output additional diagnostic information"
     echo "  -e environment   specify the Mobian graphical shell/environment (phosh)"
     echo "  -H hostname      specify the system hostname (default: mobian)"
-    echo "  -i               build only the system image, do not build the rootfs or installer/installfs images"
-    echo "  -z               compress the built image(s)"
+    echo "  -i               skip creating, re-use existing, rootfs and installfs if possible"
+    echo "  -z               compress the built image"
     echo "  -b               skip block map (bmap) creation"
-    echo "  -s               install and configure openssh-server package in system image"
-    echo "  -o               build the installer/installfs image"
+    echo "  -s               install and configure openssh-server package in image"
+    echo "  -o               produce an installer image, rather than a system image"
     echo "  -Z               configure /tmp and /var/tmp as ZRAM-backed EXT FS"
     echo "  -f ftp_proxy     specify the build environment ftp_proxy variable"
     echo "  -h http_proxy    specify the build environment http_proxy variable"
     echo "  -g sign          sign the generated image sha256sums with the specified GPG key-name"
     echo "  -m memory        specify the amount of memory for debos build VM"
-    echo "  -p password      specify the password configured for the user in the built system image (default: 1234)"
+    echo "  -X scratchsize   specify the scratchsize for debos build VM"
+    echo "  -p password      specify the password configured for the user in the built image (default: 1234)"
     echo "  -t device        specify the Mobian device to build for (default: pinephone)"
-    echo "  -u username      specify the username for the user in the built system image (default: mobian)"
-    echo "  -F filesystem    specify the filesystem to use in the built system image (default: ext4)"
+    echo "  -u username      specify the username for the user in the built image (default: mobian)"
+    echo "  -F filesystem    specify the filesystem to use in the built image (default: ext4)"
     echo "  -x debian_suite  specify the Debian suite to build the image with (default: bookworm)"
     echo "  -S suite         specify the Mobian suite to build the image with (default: bookworm)"
-    echo "  -C               enable the contrib repository in the built system image"
+    echo "  -C               enable the contrib repository in the built image"
     echo "  -r               create miniramfs"
     echo "NOTE: ARGS environment variable is respected and may be used to command debos directly"
     echo "NOTE: specifying a device may override other specified options without warning"
@@ -48,6 +49,7 @@ image_only=
 installer=
 zram=
 memory=
+scratchsize="8G"
 password=
 use_docker=
 username=
@@ -59,7 +61,7 @@ contrib=
 sign=
 miniramfs=
 
-while getopts "dDizobsZCrx:S:e:H:f:g:h:m:p:t:u:F:" opt
+while getopts "dDizobsZCrx:S:e:H:f:g:h:m:X:p:t:u:F:" opt
 do
   case "$opt" in
     d ) use_docker=1 ;;
@@ -76,6 +78,7 @@ do
     h ) http_proxy="$OPTARG" ;;
     g ) sign="$OPTARG" ;;
     m ) memory="$OPTARG" ;;
+    X ) scratchsize="$OPTARG" ;;
     p ) password="$OPTARG" ;;
     t ) device="$OPTARG" ;;
     u ) username="$OPTARG" ;;
@@ -160,6 +163,7 @@ fi
 
 [ "$debug"       ] && ARGS="$ARGS --debug-shell"
 [ "$memory"      ] && ARGS="$ARGS --memory $memory"
+[ "$scratchsize" ] && ARGS="$ARGS --scratchsize=$scratchsize"
 [ "$http_proxy"  ] && ARGS="$ARGS -e  http_proxy:$http_proxy"
 [ "$ftp_proxy"   ] && ARGS="$ARGS -e   ftp_proxy:$ftp_proxy"
 [ "$username"    ] && ARGS="$ARGS -t    username:$username"
@@ -181,8 +185,7 @@ ARGS="$ARGS \
 -t          suite:$suite \
 -t          image:$image_file \
 -t         rootfs:$rootfs_file \
--t      installfs:$installfs_file \
---scratchsize=8G"
+-t      installfs:$installfs_file"
 
 if [ ! "$image_only" -o ! -f "$rootfs_file" ]; then
   $DEBOS_CMD $ARGS rootfs.yaml || exit 1
