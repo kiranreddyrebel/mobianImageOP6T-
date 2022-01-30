@@ -24,6 +24,7 @@ usage() {
     echo "  -x debian_suite  specify the Debian suite to build the image with (default: bookworm)"
     echo "  -S suite         specify the Mobian suite to build the image with (default: bookworm)"
     echo "  -C               enable the contrib repository in the built image"
+    echo "  -N               enable the nonfree repository in the built image"
     echo "  -r               create miniramfs"
     echo "NOTE: ARGS environment variable is respected and may be used to command debos directly"
     echo "NOTE: specifying a device may override other specified options without warning"
@@ -58,10 +59,11 @@ ssh=
 debian_suite="bookworm"
 suite="bookworm"
 contrib=
+nonfree=$(echo $ARGS | grep -q "nonfree:true" && echo 1)
 sign=
 miniramfs=
 
-while getopts "dDizobsZCrx:S:e:H:f:g:h:m:X:p:t:u:F:" opt
+while getopts "dDizobsZCNrx:S:e:H:f:g:h:m:X:p:t:u:F:" opt
 do
   case "$opt" in
     d ) use_docker=1 ;;
@@ -86,6 +88,7 @@ do
     x ) debian_suite="$OPTARG" ;;
     S ) suite="$OPTARG" ;;
     C ) contrib=1 ;;
+    N ) nonfree=1 ;;
     r ) miniramfs=1 ;;
     * ) usage && exit 1
   esac
@@ -95,12 +98,14 @@ case "$device" in
   "pinephone" )
     arch="arm64"
     family="sunxi"
+    nonfree=1
     ;;
   "pinephonepro" )
     arch="arm64"
     family="rockchip"
     suite="unstable"
-    ARGS="$ARGS -t nonfree:true -t bootstart:16MiB"
+    nonfree=1
+    ARGS="$ARGS -t bootstart:16MiB"
     ;;
   "pinetab" )
     arch="arm64"
@@ -114,13 +119,15 @@ case "$device" in
     arch="arm64"
     family="sdm845"
     suite="unstable"
-    ARGS="$ARGS -t nonfree:true -t imagesize:5GB"
+    nonfree=1
+    ARGS="$ARGS -t imagesize:5GB"
     ;;
   "surfacepro3" )
     arch="amd64"
     family="amd64"
     partitiontable="gpt"
-    ARGS="$ARGS -t nonfree:true -t imagesize:5GB"
+    nonfree=1
+    ARGS="$ARGS -t imagesize:5GB"
     ;;
   "amd64" )
     arch="amd64"
@@ -150,7 +157,7 @@ if [ "$installer" ]; then
 fi
 
 rootfs_file="rootfs-$arch-$environment.tar.gz"
-if echo $ARGS | grep -q "nonfree:true"; then
+if [ "$nonfree" ]; then
   rootfs_file="rootfs-$arch-$environment-nonfree.tar.gz"
 fi
 
@@ -173,6 +180,7 @@ fi
 [ "$hostname"    ] && ARGS="$ARGS -t    hostname:$hostname"
 [ "$miniramfs"   ] && ARGS="$ARGS -t   miniramfs:true"
 [ "$contrib"     ] && ARGS="$ARGS -t     contrib:true"
+[ "$nonfree"     ] && ARGS="$ARGS -t     nonfree:true"
 [ "$zram"        ] && ARGS="$ARGS -t        zram:true"
 
 ARGS="$ARGS \
