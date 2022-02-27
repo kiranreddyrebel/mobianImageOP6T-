@@ -5,6 +5,8 @@
 {{- $filesystem := or .filesystem "ext4" }}
 {{- $environment := or .environment "phosh" -}}
 {{- $image := or .image "mobian" -}}
+{{- $do_compress:= or .do_compress "false" -}}
+{{- $rootfs_device := or .rootfs_device "rootfs-$device-$environment" -}}
 {{- $imagesize := or .imagesize "3.8GB" }}
 {{- $miniramfs := or .miniramfs "false" }}
 {{- $zram := or .zram "false" -}}
@@ -14,7 +16,11 @@ architecture: {{ $architecture }}
 
 actions:
   - action: unpack
-    file: rootfs-{{ $device }}-{{ $environment }}.tar.gz
+{{ if eq $do_compress "false" }}
+    file: {{ $rootfs_device }}.tar
+{{ else }}
+    file: {{ $rootfs_device }}.tar.gz
+{{ end }}
 
   - action: run
     description: Lighten initramfs

@@ -3,5 +3,5 @@
 *.sha256sums*
 *.simg
 *.sqfs
-*.tar.gz
+/*.tar*
 overlays/ssh/authorized_keys

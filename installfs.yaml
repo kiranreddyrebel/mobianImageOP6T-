@@ -4,7 +4,8 @@
 {{- $hostname := or .hostname "mobian" -}}
 {{- $debian_suite := or .debian_suite "bookworm" -}}
 {{- $suite := or .suite $debian_suite -}}
-{{- $installfs := or .installfs "installfs.tar.gz" }}
+{{- $do_compress:= or .do_compress "false" -}}
+{{- $installfs := or .installfs "installfs.tar" }}
 
 architecture: {{ $architecture }}
 
@@ -55,3 +56,6 @@ actions:
 
   - action: pack
     file: {{ $installfs }}
+{{ if eq $do_compress "false" }}
+    compression: none
+{{ end }}

@@ -3,7 +3,9 @@
 {{- $nonfree := or .nonfree "false" -}}
 {{- $device := or .device "pinephone" }}
 {{- $environment := or .environment "phosh" -}}
-{{- $rootfs := or .rootfs "rootfs.tar.gz" }}
+{{- $do_compress := or .do_compress "false" -}}
+{{- $rootfs := or .rootfs "rootfs.tar" }}
+{{- $rootfs_device := or .rootfs_device "rootfs-$device-$environment" }}
 
 architecture: {{ $architecture }}
 
@@ -29,4 +31,9 @@ actions:
     script: scripts/rootfs-cleanup.sh
 
   - action: pack
-    file: rootfs-{{ $device }}-{{ $environment }}.tar.gz
+{{ if eq $do_compress "false" }}
+    file: {{ $rootfs_device }}.tar
+    compression: none
+{{ else }}
+    file: {{ $rootfs_device }}.tar.gz
+{{ end }}

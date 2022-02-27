@@ -108,17 +108,24 @@ case "$device" in
     ;;
 esac
 
-installfs_file="installfs-$arch.tar.gz"
+compress_suffix=
+[ "$do_compress" ] && compress_suffix='.gz'
 
-image_file="mobian-$device-$environment-`date +%Y%m%d`"
+file_date=$(date +%Y%m%d)
+
+installfs_file="installfs-$arch-$file_date.tar$compress_suffix"
+rootfs_device_base="rootfs-$device-$environment-$file_date"
+rootfs_device_file="$rootfs_device_base.tar$compress_suffix"
+
+image_file_base="mobian-$device-$environment-$file_date"
 if [ "$installer" ]; then
   image="installer"
-  image_file="mobian-installer-$device-$environment-`date +%Y%m%d`"
+  image_file_base="mobian-installer-$device-$environment-$file_date"
 fi
 
-rootfs_file="rootfs-$arch-$environment.tar.gz"
+rootfs_file="rootfs-$arch-$environment-$file_date.tar$compress_suffix"
 if echo $ARGS | grep -q "nonfree:true"; then
-  rootfs_file="rootfs-$arch-$environment-nonfree.tar.gz"
+  rootfs_file="rootfs-$arch-$environment-nonfree-$file_date.tar$compress_suffix"
 fi
 
 if [ "$use_docker" ]; then
@@ -143,9 +150,9 @@ fi
 
 ARGS="$ARGS -t architecture:$arch -t family:$family -t device:$device \
             -t partitiontable:$partitiontable -t filesystem:$filesystem \
-            -t environment:$environment -t image:$image_file -t rootfs:$rootfs_file \
+            -t environment:$environment -t image:$image_file_base -t rootfs:$rootfs_file \
             -t debian_suite:$debian_suite -t suite:$suite --scratchsize=8G \
-            -t installfs:$installfs_file"
+            -t installfs:$installfs_file -t rootfs_device:$rootfs_device_base -t do_compress:$do_compress"
 
 if [ ! "$image_only" -o ! -f "$rootfs_file" ]; then
   $DEBOS_CMD $ARGS rootfs.yaml || exit 1
@@ -154,29 +161,31 @@ if [ ! "$image_only" -o ! -f "$rootfs_file" ]; then
   fi
 fi
 
-if [ ! "$image_only" -o ! -f "rootfs-$device-$environment.tar.gz" ]; then
-  $DEBOS_CMD $ARGS "rootfs-device.yaml" || exit 1
+if [ ! "$image_only" -o ! -f "$rootfs_device_file" ]; then
+  $DEBOS_CMD $ARGS rootfs-device.yaml || exit 1
 fi
 
+rootfs_device_sqfs="$rootfs_device_base.sqfs"
 # Convert rootfs tarball to squashfs for inclusion in the installer image
-if [ "$installer" -a ! -f "rootfs-$device-$environment.sqfs" ]; then
-  zcat "rootfs-$device-$environment.tar.gz" | tar2sqfs "rootfs-$device-$environment.sqfs"
+if [ "$installer" -a ! -f "$rootfs_device_sqfs" ]; then
+  zcat "$rootfs_device_file" | tar2sqfs "$rootfs_device_sqfs"
 fi
 
 $DEBOS_CMD $ARGS "$image.yaml"
 
-if [ ! "$no_blockmap" -a -f "$image_file.img" ]; then
-  bmaptool create "$image_file.img" > "$image_file.img.bmap"
+if [ ! "$no_blockmap" -a -f "$image_file_base.img" ]; then
+  bmaptool create "$image_file_base.img" > "$image_file_base.img.bmap"
 fi
 
 if [ "$do_compress" ]; then
-  echo "Compressing ${image_file}..."
-  [ -f ${image_file}.img ] && gzip --keep --force ${image_file}.img
-  [ -f ${image_file}.root.img ] && tar czf ${image_file}.tar.gz ${image_file}.boot-*.img ${image_file}.root.img
+  echo "Compressing ${image_file_base}.img ..."
+  [ -f ${image_file_base}.img ] && gzip --keep --force ${image_file_base}.img
+  # for sdm845 ...
+  [ -f ${image_file_base}.root.img ] && tar czf ${image_file_base}.tar.gz ${image_file_base}.boot-*.img ${image_file_base}.root.img
 fi
 
 if [ -n "$sign" ]; then
-    truncate -s0 ${image_file}.sha256sums
+    truncate -s0 ${image_file_base}.sha256sums
     if [ "$do_compress" ]; then
         extensions="img.gz tar.gz img.bmap"
     else
@@ -184,11 +193,11 @@ if [ -n "$sign" ]; then
     fi
 
     for ext in ${extensions}; do
-        for file in $(ls ${image_file}.${ext} 2>/dev/null); do
-            sha256sum ${file} >> ${image_file}.sha256sums
+        for file in $(ls ${image_file_base}.${ext} 2>/dev/null); do
+            sha256sum ${file} >> ${image_file_base}.sha256sums
         done
     done
 
-    [ -f ${image_file}.sha256sums.asc ] && rm ${image_file}.sha256sums.asc
-    gpg -u ${sign} --clearsign ${image_file}.sha256sums
+    [ -f ${image_file_base}.sha256sums.asc ] && rm ${image_file_base}.sha256sums.asc
+    gpg -u ${sign} --clearsign ${image_file_base}.sha256sums
 fi
