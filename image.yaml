@@ -40,14 +40,10 @@ actions:
 {{ end }}
 
 {{ if eq $miniramfs "true" }}
-  - action: overlay
-    source: overlays/miniramfs
-    destination: usr/share/miniramfs
-
   - action: run
     description: Create miniramfs
     chroot: true
-    script: scripts/create-miniramfs.sh
+    command: /usr/share/miniramfs/create-miniramfs.sh
 
   - action: run
     description: Export miniramfs
