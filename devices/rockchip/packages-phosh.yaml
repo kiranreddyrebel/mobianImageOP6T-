@@ -1,5 +1,6 @@
 {{- $architecture := or .architecture "arm64" -}}
 {{- $device := or .device "pinephonepro" }}
+{{- $miniramfs := or .miniramfs "false" }}
 
 architecture: {{ $architecture }}
 
@@ -12,3 +13,6 @@ actions:
       - mobian-phosh-phone
       - firefox-esr-mobile-config
       - powersupply
+{{ if $miniramfs }}
+      - miniramfs
+{{ end }}

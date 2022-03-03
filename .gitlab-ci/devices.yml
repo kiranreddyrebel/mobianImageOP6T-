@@ -15,6 +15,7 @@
     MOBIAN_BOOT_PARTITION_START: "16MiB"
     MOBIAN_INCLUDE_NONFREE: "true"
     MOBIAN_SUITE: "staging"
+    MOBIAN_MINIRAMFS: "true"
 
 .device-pinetab:
   extends:

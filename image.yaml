@@ -16,10 +16,20 @@ actions:
   - action: unpack
     file: rootfs-{{ $device }}-{{ $environment }}.tar.gz
 
+  - action: apt
+    description: Lighten initramfs
+    packages: 
+        - osk-sdl 
+        - cryptsetup
+# PPP only needs miniramfs for installer
+{{ if and (eq $miniramfs "true") (eq $device "pinephonepro") }}
+        - miniramfs
+{{ end }}
+    
   - action: run
     description: Lighten initramfs
     chroot: true
-    command: apt-get -y remove osk-sdl cryptsetup && apt-get -y autoremove
+    command: apt-get -y autoremove
 
   - action: recipe
     recipe: include/partition-{{ $partitiontable }}.yaml
@@ -39,7 +49,7 @@ actions:
     script: scripts/setup-zram-mounts.sh
 {{ end }}
 
-{{ if eq $miniramfs "true" }}
+{{ if and (eq $miniramfs "true") (ne $device "pinephonepro") }}
   - action: run
     description: Create miniramfs
     chroot: true

@@ -4,6 +4,7 @@
 {{- $device := or .device "pinephone" }}
 {{- $environment := or .environment "phosh" -}}
 {{- $rootfs := or .rootfs "rootfs.tar.gz" }}
+{{- $miniramfs := or .miniramfs "false" }}
 
 architecture: {{ $architecture }}
 
@@ -22,6 +23,7 @@ actions:
     recipe: devices/{{ $family }}/packages-{{ $environment }}.yaml
     variables:
       device: {{ $device }}
+      miniramfs: {{ $miniramfs }}
 
   - action: run
     description: Cleanup filesystem
