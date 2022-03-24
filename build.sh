@@ -67,7 +67,7 @@ case "$device" in
     arch="arm64"
     family="rockchip"
     suite="staging"
-    ARGS="$ARGS -t nonfree:true -t bootstart:16MiB"
+    ARGS="$ARGS -t nonfree:true"
     ;;
   "pinetab" )
     arch="arm64"
@@ -76,6 +76,7 @@ case "$device" in
   "librem5" )
     arch="arm64"
     family="librem5"
+    ARGS="$ARGS -t bootstart:8MiB"
     ;;
   "oneplus6"|"pocof1" )
     arch="arm64"

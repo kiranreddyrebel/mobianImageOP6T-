@@ -8,7 +8,7 @@
 {{- $imagesize := or .imagesize "3.8GB" }}
 {{- $miniramfs := or .miniramfs "false" }}
 {{- $zram := or .zram "false" -}}
-{{- $bootstart := or .bootstart "8MiB" }}
+{{- $bootstart := or .bootstart "0%" }}
 
 architecture: {{ $architecture }}
 

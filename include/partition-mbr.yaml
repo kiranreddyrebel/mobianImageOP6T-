@@ -2,7 +2,7 @@
 {{- $filesystem := or .filesystem "ext4" }}
 {{- $image := or .image "mobian-$device" -}}
 {{- $imagesize := or .imagesize "3.8GB" }}
-{{- $bootstart := or .bootstart "8MiB" }}
+{{- $bootstart := or .bootstart "0%" }}
 {{- $rootstart := or .rootstart "512MiB" }}
 
 architecture: {{ $architecture }}

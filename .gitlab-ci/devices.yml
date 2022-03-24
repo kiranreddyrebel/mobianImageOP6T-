@@ -12,7 +12,6 @@
   variables:
     MOBIAN_DEVICE_FAMILY: "rockchip"
     MOBIAN_DEVICE_NAME: "pinephonepro"
-    MOBIAN_BOOT_PARTITION_START: "16MiB"
     MOBIAN_INCLUDE_NONFREE: "true"
     MOBIAN_SUITE: "staging"
 
@@ -29,6 +28,7 @@
   variables:
     MOBIAN_DEVICE_FAMILY: "librem5"
     MOBIAN_DEVICE_NAME: "librem5"
+    MOBIAN_BOOT_PARTITION_START: "8MiB"
 
 .device-oneplus6:
   extends:
@@ -56,7 +56,6 @@
     MOBIAN_DEVICE_NAME: "surfacepro3"
     MOBIAN_INCLUDE_NONFREE: "true"
     MOBIAN_PARTITION_TABLE: "gpt"
-    MOBIAN_BOOT_PARTITION_START: "0%"
 
 .device-amd64-pc:
   extends:
@@ -74,4 +73,3 @@
     MOBIAN_DEVICE_NAME: "efi"
     MOBIAN_IMAGE_SIZE: "20GB"
     MOBIAN_PARTITION_TABLE: "gpt"
-    MOBIAN_BOOT_PARTITION_START: "0%"
