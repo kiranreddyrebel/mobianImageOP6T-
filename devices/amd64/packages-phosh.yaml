@@ -4,13 +4,6 @@
 architecture: {{ $architecture }}
 
 actions:
-  - action: apt
-    recommends: false
-    description: Install device-specific packages
-    packages:
-{{ if eq $device "efi" "pc" }}
-      - linux-image-amd64
-      - grub-{{ $device }}
-{{ else }}
-      - {{ $device }}-support
-{{ end }}
+  # Nothing to be done, but we need an action anyway
+  - action: run
+    command: true

@@ -38,9 +38,12 @@ actions:
     script: scripts/setup-apt.sh {{ $debian_suite }} {{ $suite }} {{ $contrib }} {{ $nonfree }}
 
   - action: recipe
-    recipe: include/packages-{{ $environment }}.yaml
+    recipe: include/packages-base.yaml
     variables:
       ssh: {{ $ssh }}
+
+  - action: recipe
+    recipe: include/packages-{{ $environment }}.yaml
 
   - action: run
     description: Set up default user

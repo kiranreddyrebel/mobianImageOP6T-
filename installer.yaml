@@ -38,11 +38,10 @@ actions:
     command: sed -i 's/main$/main non-free/g' /etc/apt/sources.list
 {{ end }}
 
-  - action: apt
-    recommends: false
-    description: Install device-specific packages
-    packages:
-      - {{ $device }}-support
+  - action: recipe
+    recipe: devices/{{ $family }}/packages-base.yaml
+    variables:
+      device: {{ $device }}
 
   - action: run
     description: Prepare bootloader

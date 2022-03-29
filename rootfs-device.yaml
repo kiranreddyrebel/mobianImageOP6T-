@@ -20,6 +20,11 @@ actions:
 {{ end }}
 
   - action: recipe
+    recipe: devices/{{ $family }}/packages-base.yaml
+    variables:
+      device: {{ $device }}
+
+  - action: recipe
     recipe: devices/{{ $family }}/packages-{{ $environment }}.yaml
     variables:
       device: {{ $device }}

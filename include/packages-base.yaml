@@ -1,0 +1,18 @@
+{{- $architecture := or .architecture "arm64" -}}
+{{- $ssh := or .ssh "" -}}
+
+architecture: {{ $architecture }}
+
+actions:
+  - action: apt
+    recommends: false
+    description: Install base packages
+    packages:
+      - cryptsetup
+      - cryptsetup-initramfs
+      - libblockdev-crypto2
+      - mobian-base
+{{ if $ssh }}
+      - openssh-server
+{{ end }}
+      - osk-sdl

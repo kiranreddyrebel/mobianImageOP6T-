@@ -1,12 +1,11 @@
 {{- $architecture := or .architecture "arm64" -}}
-{{- $ssh := or .ssh "" -}}
 
 architecture: {{ $architecture }}
 
 actions:
   - action: apt
     recommends: false
-    description: Install mobian-specific packages
+    description: Install Phosh packages
     packages:
       - mobian-phosh
       # Additional software we don't want metapackages to depend on
@@ -18,6 +17,7 @@ actions:
       - gedit
       - gnome-calculator
       - gnome-calendar
+      - gnome-console
       - gnome-maps
       - gnome-software
       - gnome-software-plugin-flatpak
@@ -25,16 +25,6 @@ actions:
       - gnome-todo
       - gnome-usage
       - gnome-weather
-      - kgx
-      - libblockdev-crypto2
       - lollypop
       - portfolio-filemanager
       - webext-ublock-origin
-{{ if $ssh }}
-      - openssh-server
-{{ end }}
-      - cryptsetup
-      - cryptsetup-initramfs
-      - osk-sdl
-      # Temporary hack for fractal (unable to rebuild the package atm)
-      - gstreamer1.0-gtk3
