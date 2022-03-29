@@ -68,6 +68,10 @@ case "$device" in
     family="rockchip"
     suite="staging"
     ARGS="$ARGS -t nonfree:true"
+    # Encrypted / on PPP requires miniramfs
+    if [ ${installer} -eq 1 ]; then
+        miniramfs=1
+    fi
     ;;
   "pinetab" )
     arch="arm64"

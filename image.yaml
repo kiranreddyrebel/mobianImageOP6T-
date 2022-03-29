@@ -19,8 +19,14 @@ actions:
   - action: run
     description: Lighten initramfs
     chroot: true
+{{ if and (eq $miniramfs "true") (eq $device "pinephonepro") }}
+# PPP only needs miniramfs for installer
+# Purge because otherwise the config file remains and breaks boot
+    command: apt-get -y purge miniramfs osk-sdl cryptsetup && apt-get -y autoremove
+{{ else }}
     command: apt-get -y remove osk-sdl cryptsetup && apt-get -y autoremove
-
+{{ end }}
+    
   - action: recipe
     recipe: include/partition-{{ $partitiontable }}.yaml
     variables:
@@ -40,14 +46,10 @@ actions:
 {{ end }}
 
 {{ if eq $miniramfs "true" }}
-  - action: overlay
-    source: overlays/miniramfs
-    destination: usr/share/miniramfs
-
   - action: run
     description: Create miniramfs
     chroot: true
-    script: scripts/create-miniramfs.sh
+    command: /usr/sbin/update-miniramfs -u
 
   - action: run
     description: Export miniramfs
