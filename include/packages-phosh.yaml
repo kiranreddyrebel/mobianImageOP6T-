@@ -11,7 +11,7 @@ actions:
       # Additional software we don't want metapackages to depend on
       - eog
       - epiphany-browser
-#      - evince
+      - evince
       - firefox-esr
       - geary
       - gedit
