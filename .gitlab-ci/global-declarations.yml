@@ -16,6 +16,14 @@ default:
   tags:
     - kvm
 
+workflow:
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+      when: never
+    - if: $CI_PROJECT_ROOT_NAMESPACE == "mobian1"
+      when: always
+    - when: never
+
 variables:
   DEBIAN_SUITE: "bookworm"
   MOBIAN_SUITE: "bookworm"
