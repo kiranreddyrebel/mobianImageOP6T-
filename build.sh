@@ -29,12 +29,14 @@ suite="bookworm"
 contrib=
 sign=
 miniramfs=
+verbose=
 
-while getopts "dDizobsZCrx:S:e:H:f:g:h:m:p:t:u:F:" opt
+while getopts "dDvizobsZCrx:S:e:H:f:g:h:m:p:t:u:F:" opt
 do
   case "$opt" in
     d ) use_docker=1 ;;
     D ) debug=1 ;;
+    v ) verbose=1 ;;
     e ) environment="$OPTARG" ;;
     H ) hostname="$OPTARG" ;;
     i ) image_only=1 ;;
@@ -134,6 +136,7 @@ if [ "$use_docker" ]; then
 fi
 
 [ "$debug" ] && ARGS="$ARGS --debug-shell"
+[ "$verbose" ] && ARGS="$ARGS --verbose"
 [ "$username" ] && ARGS="$ARGS -t username:$username"
 [ "$password" ] && ARGS="$ARGS -t password:$password"
 [ "$ssh" ] && ARGS="$ARGS -t ssh:$ssh"
