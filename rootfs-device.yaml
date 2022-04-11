@@ -20,6 +20,9 @@ actions:
 {{ end }}
 
   - action: recipe
+    recipe: include/packages-fde.yaml
+
+  - action: recipe
     recipe: devices/{{ $family }}/packages-base.yaml
     variables:
       device: {{ $device }}

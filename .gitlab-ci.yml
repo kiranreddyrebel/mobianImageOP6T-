@@ -44,6 +44,8 @@ devicefs-pinephone-phosh:
     - rootfs-arm64-phosh
 
 devicefs-pinephonepro-phosh:
+  variables:
+    MOBIAN_MINIRAMFS: "true"
   extends:
     - .devicefs
     - .device-pinephonepro
@@ -59,61 +61,13 @@ devicefs-pinetab-phosh:
   needs:
     - rootfs-arm64-phosh
 
-devicefs-librem5-phosh:
-  extends:
-    - .devicefs
-    - .device-librem5
-    - .shell-phosh
-  needs:
-    - rootfs-arm64-phosh
-
-devicefs-oneplus6-phosh:
-  extends:
-    - .devicefs
-    - .device-oneplus6
-    - .shell-phosh
-  needs:
-    - rootfs-arm64-phosh-staging
-
-devicefs-pocof1-phosh:
-  extends:
-    - .devicefs
-    - .device-pocof1
-    - .shell-phosh
-  needs:
-    - rootfs-arm64-phosh-staging
-
-devicefs-surfacepro3-phosh:
-  extends:
-    - .devicefs
-    - .device-surfacepro3
-    - .shell-phosh
-  needs:
-    - rootfs-amd64-phosh
-
-devicefs-amd64-uefi-phosh:
-  extends:
-    - .devicefs
-    - .device-amd64-uefi
-    - .shell-phosh
-  needs:
-    - rootfs-amd64-phosh
-
-devicefs-amd64-pc-phosh:
-  extends:
-    - .devicefs
-    - .device-amd64-pc
-    - .shell-phosh
-  needs:
-    - rootfs-amd64-phosh
-
 image-pinephone-phosh:
   extends:
     - .image
     - .device-pinephone
     - .shell-phosh
   needs:
-    - devicefs-pinephone-phosh
+    - rootfs-arm64-phosh
 
 image-pinephonepro-phosh:
   extends:
@@ -121,7 +75,7 @@ image-pinephonepro-phosh:
     - .device-pinephonepro
     - .shell-phosh
   needs:
-    - devicefs-pinephonepro-phosh
+    - rootfs-arm64-phosh-staging
 
 image-pinetab-phosh:
   extends:
@@ -129,7 +83,7 @@ image-pinetab-phosh:
     - .device-pinetab
     - .shell-phosh
   needs:
-    - devicefs-pinetab-phosh
+    - rootfs-arm64-phosh
 
 image-librem5-phosh:
   extends:
@@ -137,7 +91,7 @@ image-librem5-phosh:
     - .device-librem5
     - .shell-phosh
   needs:
-    - devicefs-librem5-phosh
+    - rootfs-arm64-phosh
 
 image-oneplus6-phosh:
   extends:
@@ -145,7 +99,7 @@ image-oneplus6-phosh:
     - .device-oneplus6
     - .shell-phosh
   needs:
-    - devicefs-oneplus6-phosh
+    - rootfs-arm64-phosh-staging
 
 image-pocof1-phosh:
   extends:
@@ -153,7 +107,7 @@ image-pocof1-phosh:
     - .device-pocof1
     - .shell-phosh
   needs:
-    - devicefs-pocof1-phosh
+    - rootfs-arm64-phosh-staging
 
 image-surfacepro3-phosh:
   extends:
@@ -161,7 +115,7 @@ image-surfacepro3-phosh:
     - .device-surfacepro3
     - .shell-phosh
   needs:
-    - devicefs-surfacepro3-phosh
+    - rootfs-amd64-phosh
 
 image-amd64-uefi-phosh:
   extends:
@@ -169,7 +123,7 @@ image-amd64-uefi-phosh:
     - .device-amd64-uefi
     - .shell-phosh
   needs:
-    - devicefs-amd64-uefi-phosh
+    - rootfs-amd64-phosh
 
 image-amd64-pc-phosh:
   extends:
@@ -177,7 +131,7 @@ image-amd64-pc-phosh:
     - .device-amd64-pc
     - .shell-phosh
   needs:
-    - devicefs-amd64-pc-phosh
+    - rootfs-amd64-phosh
 
 installer-pinephone-phosh:
   extends:

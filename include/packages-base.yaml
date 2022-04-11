@@ -8,11 +8,7 @@ actions:
     recommends: false
     description: Install base packages
     packages:
-      - cryptsetup
-      - cryptsetup-initramfs
-      - libblockdev-crypto2
       - mobian-base
 {{ if $ssh }}
       - openssh-server
 {{ end }}
-      - osk-sdl

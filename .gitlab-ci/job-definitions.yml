@@ -1,10 +1,13 @@
 prepare-artifacts-dir:
   stage: .pre
+  tags: []
   script:
     - ssh builder@mobian.org mkdir -p ${ARTIFACTS_ROOT}/${CI_PIPELINE_ID}
 
 cleanup-artifacts-dir:
+  interruptible: false
   stage: .post
+  tags: []
   script:
     - ssh builder@mobian.org rm -rf ${ARTIFACTS_ROOT}/${CI_PIPELINE_ID}
   when: always
@@ -98,7 +101,7 @@ cleanup-artifacts-dir:
 .image:
   stage: image
   script:
-    - MOBIAN_ARTIFACTS="rootfs-${MOBIAN_DEVICE_NAME}-${MOBIAN_GRAPHICAL_SHELL}.tar.gz"
+    - MOBIAN_ARTIFACTS="rootfs-${ARCH}-${MOBIAN_GRAPHICAL_SHELL}-${MOBIAN_SUITE}.tar.gz"
     - *restore-artifacts
     - IMAGE_NAME=mobian-${MOBIAN_DEVICE_NAME}-${MOBIAN_GRAPHICAL_SHELL}-$(date --date="${CI_PIPELINE_CREATED_AT}" +%Y%m%d)
     - debos --scratchsize=8G
@@ -109,8 +112,11 @@ cleanup-artifacts-dir:
       -t filesystem:${MOBIAN_FILESYSTEM}
       -t image:${IMAGE_NAME}
       -t imagesize:${MOBIAN_IMAGE_SIZE}
+      -t nonfree:${MOBIAN_INCLUDE_NONFREE}
       -t partitiontable:${MOBIAN_PARTITION_TABLE}
+      -t rootfs:${MOBIAN_ARTIFACTS}
       -t bootstart:${MOBIAN_BOOT_PARTITION_START}
+      -t miniramfs:${MOBIAN_MINIRAMFS}
       image.yaml
     - *finish-images
     - *sign-images

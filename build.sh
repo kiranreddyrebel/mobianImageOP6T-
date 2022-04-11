@@ -128,6 +128,12 @@ if echo $ARGS | grep -q "nonfree:true"; then
   rootfs_file="rootfs-$arch-$environment-nonfree.tar.gz"
 fi
 
+# Cleanup previous artifacts if we're not re-using them
+if [ ! "$image_only" ]; then
+  rm -f "$rootfs_file" "$installfs_file" \
+        "rootfs-$device-$environment.tar.gz"
+fi
+
 if [ "$use_docker" ]; then
   DEBOS_CMD=docker
   ARGS="run --rm --interactive --tty --device /dev/kvm --workdir /recipes \
@@ -157,21 +163,26 @@ ARGS="$ARGS -t architecture:$arch -t family:$family -t device:$device \
 
 if [ ! "$image_only" -o ! -f "$rootfs_file" ]; then
   $DEBOS_CMD $ARGS rootfs.yaml || exit 1
-  if [ "$installer" ]; then
+  # Ensure subsequent artifacts are rebuilt too
+  rm -f "rootfs-$device-$environment.tar.gz"
+fi
+
+if [ "$installer" ]; then
+  if [ ! "$image_only" -o ! -f "$installfs_file" ]; then
     $DEBOS_CMD $ARGS installfs.yaml || exit 1
   fi
-fi
-
-if [ ! "$image_only" -o ! -f "rootfs-$device-$environment.tar.gz" ]; then
-  $DEBOS_CMD $ARGS "rootfs-device.yaml" || exit 1
-fi
-
-# Convert rootfs tarball to squashfs for inclusion in the installer image
-if [ "$installer" -a ! -f "rootfs-$device-$environment.sqfs" ]; then
-  zcat "rootfs-$device-$environment.tar.gz" | tar2sqfs "rootfs-$device-$environment.sqfs"
+  if [ ! "$image_only" -o ! -f "rootfs-$device-$environment.tar.gz" ]; then
+    $DEBOS_CMD $ARGS "rootfs-device.yaml" || exit 1
+  fi
+  # Convert rootfs tarball to squashfs for inclusion in the installer image
+  zcat "rootfs-$device-$environment.tar.gz" | tar2sqfs "rootfs-$device-$environment.sqfs" > /dev/null 2>&1
 fi
 
 $DEBOS_CMD $ARGS "$image.yaml"
+
+if [ "$installer" ]; then
+  rm -f "rootfs-$device-$environment.sqfs"
+fi
 
 if [ ! "$no_blockmap" -a -f "$image_file.img" ]; then
   bmaptool create "$image_file.img" > "$image_file.img.bmap"

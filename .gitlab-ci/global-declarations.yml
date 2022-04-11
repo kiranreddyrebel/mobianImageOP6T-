@@ -7,6 +7,8 @@ stages:
   - installer
 
 default:
+  retry: 1
+  interruptible: true
   before_script:
     - chmod 0400 "$MOBIAN_SSH_KEY"
     - eval $(ssh-agent -s)
@@ -29,6 +31,7 @@ variables:
   MOBIAN_FILESYSTEM: "ext4"
   MOBIAN_IMAGE_SIZE: "6GB"
   MOBIAN_INCLUDE_NONFREE: "false"
+  MOBIAN_MINIRAMFS: "false"
   MOBIAN_PARTITION_TABLE: "mbr"
   ARTIFACTS_ROOT: /srv/builder/images
   DEVICEFS_UPLOAD: "false"

@@ -14,7 +14,6 @@
     MOBIAN_DEVICE_NAME: "pinephonepro"
     MOBIAN_INCLUDE_NONFREE: "true"
     MOBIAN_SUITE: "staging"
-    MOBIAN_MINIRAMFS: "true"
 
 .device-pinetab:
   extends:
@@ -39,7 +38,6 @@
     MOBIAN_DEVICE_NAME: "oneplus6"
     MOBIAN_SUITE: "staging"
     MOBIAN_INCLUDE_NONFREE: "true"
-    MOBIAN_MINIRAMFS: "true"
 
 .device-pocof1:
   extends:
@@ -49,7 +47,6 @@
     MOBIAN_DEVICE_NAME: "pocof1"
     MOBIAN_SUITE: "staging"
     MOBIAN_INCLUDE_NONFREE: "true"
-    MOBIAN_MINIRAMFS: "true"
 
 .device-surfacepro3:
   extends:

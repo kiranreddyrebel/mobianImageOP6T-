@@ -9,24 +9,22 @@
 {{- $miniramfs := or .miniramfs "false" }}
 {{- $zram := or .zram "false" -}}
 {{- $bootstart := or .bootstart "0%" }}
+{{- $nonfree := or .nonfree "false" -}}
+{{- $rootfs := or .rootfs "rootfs.tar.gz" }}
 
 architecture: {{ $architecture }}
 
 actions:
   - action: unpack
-    file: rootfs-{{ $device }}-{{ $environment }}.tar.gz
+    file: {{ $rootfs }}
 
+{{ if eq $nonfree "true" }}
   - action: run
-    description: Lighten initramfs
+    description: Enable non-free Debian repo
     chroot: true
-{{ if and (eq $miniramfs "true") (eq $device "pinephonepro") }}
-# PPP only needs miniramfs for installer
-# Purge because otherwise the config file remains and breaks boot
-    command: apt-get -y purge miniramfs osk-sdl cryptsetup && apt-get -y autoremove
-{{ else }}
-    command: apt-get -y remove osk-sdl cryptsetup && apt-get -y autoremove
+    command: sed -i 's/main$/main non-free/g' /etc/apt/sources.list
 {{ end }}
-    
+
   - action: recipe
     recipe: include/partition-{{ $partitiontable }}.yaml
     variables:
@@ -45,12 +43,23 @@ actions:
     script: scripts/setup-zram-mounts.sh
 {{ end }}
 
-  - action: run
-    description: Rebuild initramfs
-    chroot: true
-    script: /usr/sbin/update-initramfs -u -k all
+  - action: recipe
+    recipe: devices/{{ $family }}/packages-base.yaml
+    variables:
+      device: {{ $device }}
+
+  - action: recipe
+    recipe: devices/{{ $family }}/packages-{{ $environment }}.yaml
+    variables:
+      device: {{ $device }}
 
 {{ if eq $miniramfs "true" }}
+  - action: apt
+    recommends: true
+    description: install miniramfs
+    packages:
+      - miniramfs
+
   - action: run
     description: Create miniramfs
     chroot: true
@@ -72,3 +81,8 @@ actions:
     variables:
       device: {{ $device }}
       image: {{ $image }}
+
+  - action: run
+    description: Cleanup filesystem
+    chroot: true
+    script: scripts/rootfs-cleanup.sh
