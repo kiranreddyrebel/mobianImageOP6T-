@@ -71,16 +71,12 @@ actions:
     command: cp ${ROOTDIR}/boot/miniramfs ${ARTIFACTDIR}/{{ $image }}.miniramfs
 {{ end }}
 
-  - action: run
-    description: Prepare bootloader
-    chroot: true
-    script: devices/{{ $family }}/bootloader.sh {{ $device }} {{ $miniramfs }}
-
   - action: recipe
     recipe: devices/{{ $family }}/bootloader.yaml
     variables:
       device: {{ $device }}
       image: {{ $image }}
+      miniramfs: {{ $miniramfs }}
 
   - action: run
     description: Cleanup filesystem

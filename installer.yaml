@@ -43,12 +43,8 @@ actions:
     variables:
       device: {{ $device }}
 
-  - action: run
-    description: Prepare bootloader
-    chroot: true
-    script: devices/{{ $family }}/bootloader.sh {{ $device }}
-
   - action: recipe
     recipe: devices/{{ $family }}/bootloader.yaml
     variables:
       device: {{ $device }}
+      image: {{ $image }}

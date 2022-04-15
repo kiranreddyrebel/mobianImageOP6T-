@@ -4,6 +4,11 @@
 architecture: {{ $architecture }}
 
 actions:
+  - action: run
+    description: Download bootloader
+    chroot: true
+    script: bootloader.sh
+
   - action: raw
     description: Install bootloader
     origin: filesystem

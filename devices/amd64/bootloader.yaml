@@ -4,6 +4,7 @@
 architecture: {{ $architecture }}
 
 actions:
-  # Nothing to be done, but we need an action anyway
   - action: run
-    command: true
+    description: Install and configure GRUB
+    chroot: true
+    script: bootloader.sh {{ $device }}
