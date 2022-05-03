@@ -158,7 +158,7 @@ fi
 ARGS="$ARGS -t architecture:$arch -t family:$family -t device:$device \
             -t partitiontable:$partitiontable -t filesystem:$filesystem \
             -t image:$image_file -t rootfs:$rootfs_file -t installfs:$installfs_file \
-            -t debian_suite:$debian_suite -t suite:$suite --scratchsize=8G
+            -t debian_suite:$debian_suite -t suite:$suite --scratchsize=8G"
 
 if [ ! "$image_only" -o ! -f "$rootfs_file" ]; then
   $DEBOS_CMD $ARGS rootfs.yaml || exit 1
