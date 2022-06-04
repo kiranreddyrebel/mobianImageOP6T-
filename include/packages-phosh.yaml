@@ -14,7 +14,6 @@ actions:
       - evince
       - firefox-esr
       - geary
-      - gedit
       - gnome-calculator
       - gnome-calendar
       - gnome-console
@@ -22,6 +21,7 @@ actions:
       - gnome-software
       - gnome-software-plugin-flatpak
       - gnome-sound-recorder
+      - gnome-text-editor
       - gnome-todo
       - gnome-usage
       - gnome-weather
