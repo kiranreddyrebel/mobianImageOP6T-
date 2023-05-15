@@ -20,6 +20,14 @@ installfs-arm64:
     - .rootfs-installer
     - .arch-arm64
 
+devicefs-librem5-phosh:
+  extends:
+    - .devicefs
+    - .device-librem5
+    - .shell-phosh
+  needs:
+    - rootfs-arm64-phosh
+
 devicefs-pinephone-phosh:
   extends:
     - .devicefs
@@ -109,6 +117,15 @@ image-amd64-nonfree-phosh:
     - .shell-phosh
   needs:
     - rootfs-amd64-phosh
+
+installer-librem5-phosh:
+  extends:
+    - .installer
+    - .device-librem5
+    - .shell-phosh
+  needs:
+    - installfs-arm64
+    - devicefs-librem5-phosh
 
 installer-pinephone-phosh:
   extends:
