@@ -30,6 +30,7 @@ actions:
     recommends: false
     description: Install installer packages
     packages:
+      - ca-certificates
       - calamares-settings-mobian
       - device-tree-compiler
       - initramfs-tools
