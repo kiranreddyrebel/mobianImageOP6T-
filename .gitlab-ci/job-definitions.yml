@@ -60,6 +60,7 @@ cleanup-artifacts-dir:
       -t debian_suite:${DEBIAN_SUITE}
       -t suite:${MOBIAN_SUITE}
       -t rootfs:${MOBIAN_ARTIFACTS}
+      ${MOBIAN_EXTRA_DEBOS_ARGS}
       rootfs.yaml
     - *save-artifacts
 
@@ -71,6 +72,7 @@ cleanup-artifacts-dir:
       -t architecture:${ARCH}
       -t suite:${MOBIAN_SUITE}
       -t installfs:${MOBIAN_ARTIFACTS}
+      ${MOBIAN_EXTRA_DEBOS_ARGS}
       installfs.yaml
     - *save-artifacts
 
@@ -87,6 +89,7 @@ cleanup-artifacts-dir:
       -t nonfree:${MOBIAN_INCLUDE_NONFREE}
       -t rootfs:${MOBIAN_ARTIFACTS}
       -t miniramfs:${MOBIAN_MINIRAMFS}
+      ${MOBIAN_EXTRA_DEBOS_ARGS}
       rootfs-device.yaml
     - MOBIAN_ARTIFACTS="rootfs-${MOBIAN_DEVICE_NAME}-${MOBIAN_GRAPHICAL_SHELL}.tar.gz"
     - *save-artifacts
@@ -117,6 +120,7 @@ cleanup-artifacts-dir:
       -t rootfs:${MOBIAN_ARTIFACTS}
       -t bootstart:${MOBIAN_BOOT_PARTITION_START}
       -t miniramfs:${MOBIAN_MINIRAMFS}
+      ${MOBIAN_EXTRA_DEBOS_ARGS}
       image.yaml
     - *finish-images
     - *sign-images
@@ -142,6 +146,7 @@ cleanup-artifacts-dir:
       -t installersize:${MOBIAN_INSTALLER_SIZE}
       -t installfs:${INSTALLFS_NAME}
       -t bootstart:${MOBIAN_BOOT_PARTITION_START}
+      ${MOBIAN_EXTRA_DEBOS_ARGS}
       installer.yaml
     - *finish-images
     - *sign-images
