@@ -9,4 +9,6 @@ actions:
     description: Install device-specific base packages
     packages:
       - {{ $device }}-support
+      - dkms
+      - gcc
       - rsync
