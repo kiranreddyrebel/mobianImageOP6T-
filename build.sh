@@ -13,7 +13,6 @@ image="image"
 partitiontable="gpt"
 filesystem="ext4"
 environment="phosh"
-crypt_root=
 crypt_password=
 hostname=
 arch="arm64"
@@ -39,7 +38,6 @@ verbose=
 while getopts "cdDvizobsZCrR:x:S:e:H:f:g:h:m:M:p:t:u:F:" opt
 do
   case "${opt}" in
-    c ) crypt_root=1 ;;
     R ) crypt_password=${OPTARG} ;;
     d ) use_docker=1 ;;
     D ) debug=1 ;;
@@ -137,7 +135,8 @@ fi
 [ "${verbose}" ] && ARGS="${ARGS} --verbose"
 [ "${username}" ] && ARGS="${ARGS} -t username:${username}"
 # Must remain above password otherwise password will override this
-[ "${crypt_password}" ] && ARGS="${ARGS} -t crypt_password:${crypt_password}"
+[ "${crypt_password}" ] && ARGS="${ARGS} -t crypt_password:${crypt_password}" &&
+        ARGS="${ARGS} -t crypt_root:true"
 [ "${password}" ] && ARGS="${ARGS} -t password:${password}"
 [ "${ssh}" ] && ARGS="${ARGS} -t ssh:${ssh}"
 [ "${environment}" ] && ARGS="${ARGS} -t environment:${environment}"
