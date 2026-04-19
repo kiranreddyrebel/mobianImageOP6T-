@@ -36,11 +36,12 @@ actions:
     source: droid-juicer
     destination: /usr/share/droid-juicer/configs
   
-  #- action: run
-  #  command: echo hello & ls -la /etc/kernel/postinst.d/zz-qcom-bootimg
+  - action: overlay
+    source: zz-qcom-bootimg-mod
+    destination: zz-qcom-bootimg-mod
 
   - action: run
     #source: zz-qcom-bootimg
     chroot: true
-    command: echo ./zz-qcom-bootimg > /etc/kernel/postinst.d/zz-qcom-bootimg
+    command: cat ./zz-qcom-bootimg-mod | tee /etc/kernel/postinst.d/zz-qcom-bootimg
 {{- end }}
