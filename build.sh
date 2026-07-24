@@ -96,7 +96,7 @@ case "${device}" in
   "amd64"|"amd64-free" )
     arch="amd64"
     family="amd64"
-    ARGS="${ARGS} -t imagesize:15GB -t installersize:10GB"
+    ARGS="${ARGS} -t imagesize:20GB"
     if [ "${device}" = "amd64" ]; then
       ARGS="${ARGS} -t nonfree:true"
     fi
@@ -159,8 +159,8 @@ fi
 ARGS="${ARGS} -t architecture:${arch} -t family:${family} -t device:${device} \
             -t partitiontable:${partitiontable} -t filesystem:${filesystem} \
             -t image:${image_file} -t rootfs:${rootfs_file} -t installfs:${installfs_file} \
-            -t debian_suite:${debian_suite} -t suite:${suite} \
-            --scratchsize=8G"
+            -t debian_suite:${debian_suite} -t suite:${suite} -t installersize:12GB \
+            --cpus=1 --scratchsize=8G"
 
 if [ ! "${image_only}" ] || [ ! -f "${rootfs_file}" ]; then
   # Ensure subsequent artifacts are rebuilt too
