@@ -47,7 +47,7 @@ actions:
   - action: run
     description: Encrypt root filesystem
     label: setup-luks
-    script: scripts/setup-luks.sh {{ $crypt_password }} {{ $bootonroot }} {{ $architecture }}
+    script: scripts/setup-luks.sh "{{ $crypt_password }}" "{{ $bootonroot }}" {{ $architecture }}
 
   - action: recipe
     recipe: include/packages-fde.yaml
