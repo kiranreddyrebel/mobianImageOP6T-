@@ -3,7 +3,8 @@
     when: always
   - if: $MOBIAN_CI_DEVICE == $MOBIAN_DEVICE_FAMILY
     when: always
-  - changes:
+  - if: $CI_COMMIT_BRANCH && $CI_PIPELINE_SOURCE == "push"
+    changes:
     - devices/$MOBIAN_DEVICE_FAMILY/*
     when: always
   - when: never
