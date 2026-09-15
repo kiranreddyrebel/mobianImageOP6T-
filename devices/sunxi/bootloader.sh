@@ -3,8 +3,7 @@ set -e
 
 #Test if package is installed return 0 if installed
 is_package_installed() {
-    dpkg -s "$1" &> /dev/null
-    return $?
+    dpkg -s "$1" 2> /dev/null | grep -q "^Status:.*ok installed"
 }
 
 #download pinephone vccq package
