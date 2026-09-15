@@ -21,7 +21,18 @@ VARIANTS="$(tomlq -r 'foreach .device[] as $dev (0;
     end
 )' ${CONFIG})"
 
+if [ -z "${VARIANTS}" ]; then
+    echo "ERROR: No device variants found in ${CONFIG}!"
+    exit 1
+fi
+
+rc=0
 for variant in ${VARIANTS}; do
     echo "Extracting boot image for variant ${variant}"
-    mv "${ROOTDIR}/bootimg-${variant}" "${ARTIFACTDIR}/${IMAGE}.boot-${variant}.img"
+    if ! mv "${ROOTDIR}/bootimg-${variant}" "${ARTIFACTDIR}/${IMAGE}.boot-${variant}.img"; then
+        echo "ERROR: No boot image was built for variant ${variant}!"
+        rc=1
+    fi
 done
+
+exit ${rc}
