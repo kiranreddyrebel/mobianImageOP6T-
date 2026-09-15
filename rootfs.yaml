@@ -63,7 +63,7 @@ actions:
   - action: run
     description: Set up default user
     chroot: true
-    script: scripts/setup-user.sh {{ $username }} {{ $password }}
+    script: scripts/setup-user.sh "{{ $username }}" "{{ $password }}"
 
 {{ if $ssh }}
   - action: overlay
