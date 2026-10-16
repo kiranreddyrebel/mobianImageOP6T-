@@ -1,0 +1,11 @@
+{{- $architecture := or .architecture "arm64" -}}
+{{- $device := or .device "sdm845" }}
+
+architecture: {{ $architecture }}
+
+actions:
+  - action: apt
+    recommends: true
+    description: Install device-specific packages for Lomiri
+    packages:
+      - firefox-esr-mobile-config

@@ -1,0 +1,15 @@
+{{- $architecture := or .architecture "arm64" -}}
+{{- $device := or .device "pinephone" }}
+
+architecture: {{ $architecture }}
+
+actions:
+  - action: apt
+    recommends: true
+    description: Install device-specific packages for Lomiri
+    packages:
+{{ if ne $device "pinetab" }}
+      - firefox-esr-mobile-config
+{{ end }}
+      - imagemagick
+      - megapixels

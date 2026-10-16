@@ -1,0 +1,18 @@
+{{- $architecture := or .architecture "arm64" -}}
+
+architecture: {{ $architecture }}
+
+actions:
+  - action: apt
+    recommends: true
+    description: Install Lomiri packages
+    packages:
+      - phrog
+      - firefox-esr
+      - webext-ublock-origin-firefox
+      - lomiri-desktop
+
+  - action: run
+    description: Disable lightdm.service to avoid conflicts with phrog
+    chroot: true
+    command: systemctl disable lightdm.service
