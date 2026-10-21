@@ -20,7 +20,8 @@ lsblk -n -o kname,pkname,mountpoint
 if [ -e /dev/vda1 ]; then
     TARGET_DISK=/dev/vda
 else
-    TARGET_DISK=$(lsblk -n -o kname,pkname,mountpoint | grep loop | grep '/boot$' | awk '{ print $1 }')
+    TARGET_DISK="/dev/$(lsblk -n -o kname,pkname,mountpoint | grep loop | grep '/boot$' | awk '{ print $2 }')"
+    PART="p"
 fi
 
 if [ "${BOOTONROOT}" != "true" ]; then
@@ -30,10 +31,6 @@ else
     PARTNR=1
 fi
 
-if echo ${TARGET_DISK} | grep -q p1; then
-    PART="p"
-    TARGET_DISK="/dev/$(echo ${TARGET_DISK} | sed 's:p1::')"
-fi
 FILESYSTEM="$(blkid -s TYPE -o value ${TARGET_DISK}${PART}${PARTNR})"
 
 if [ "${FILESYSTEM}" = 'ext4' ]
