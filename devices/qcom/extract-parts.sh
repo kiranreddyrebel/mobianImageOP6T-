@@ -6,6 +6,9 @@ IMAGE="$1"
 
 [ "${IMAGE}" ] || exit 1
 
+[ -n "${ARTIFACTDIR}" ] || exit 1
+cd "${ARTIFACTDIR}"
+
 # On an Android device, we can't simply flash a full bootable image: we can only
 # flash one partition at a time using fastboot.
 
