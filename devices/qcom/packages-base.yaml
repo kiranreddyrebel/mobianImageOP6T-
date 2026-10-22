@@ -35,4 +35,13 @@ actions:
     description: Add droid-juicer configuration to image
     source: droid-juicer
     destination: /usr/share/droid-juicer/configs
+  
+  - action: overlay
+    source: zz-qcom-bootimg-mod
+    destination: zz-qcom-bootimg-mod
+
+  - action: run
+    #source: zz-qcom-bootimg
+    chroot: true
+    command: cat ./zz-qcom-bootimg-mod | tee /etc/kernel/postinst.d/zz-qcom-bootimg
 {{- end }}
