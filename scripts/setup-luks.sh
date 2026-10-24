@@ -23,6 +23,10 @@ else
     TARGET_DISK=$(lsblk -n -o kname,pkname,mountpoint | grep loop | grep '/boot$' | awk '{ print $1 }')
 fi
 
+if [[ -z "${TARGET_DISK}" ]]; then
+    TARGET_DISK=$(lsblk -n -o kname,pkname,mountpoint | grep "${ROOTDIR}" | awk '{ print $1 }')
+fi
+
 if [ "${BOOTONROOT}" != "true" ]; then
     umount -lf $ROOTDIR/boot $ROOTDIR
 else
