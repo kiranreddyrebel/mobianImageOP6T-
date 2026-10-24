@@ -46,6 +46,14 @@ Then simply browse to the `mobian-recipes` folder and execute `./build.sh`.
 
 You can use `./build.sh -d` to use the docker version of `debos`.
 
+### Enabling SSH server
+
+If you want to build images with the openssh server installed,
+you can pass the `-s` flag.
+
+You can also have your public key installed by placing it in overlay/ssh:
+`cat ~/.ssh/id_ed25519.pub > overlay/ssh/authorized_keys`
+
 ### Building QEMU image
 
 You can build a QEMU x86_64 image by adding the `-t amd64` flag to `build.sh`
