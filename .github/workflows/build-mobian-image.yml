@@ -1,0 +1,58 @@
+name: Build Mobian image
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 240
+
+    steps:
+      - name: Free up disk space
+        run: |
+          sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc /opt/hostedtoolcache/CodeQL
+          sudo docker image prune -af || true
+          df -h /
+
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Enable KVM (needed by debos/fakemachine)
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' \
+            | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+
+      - name: Install build dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            debos debootstrap qemu-system-x86 qemu-user-static \
+            binfmt-support bmap-tools squashfs-tools-ng \
+            android-sdk-libsparse-utils yq mkbootimg \
+            parted dosfstools e2fsprogs kpartx xz-utils zstd
+
+      - name: Build image
+        run: sudo ./build.sh -s -v -t sdm845 -e phosh -x trixie
+
+      - name: Compress output
+        run: |
+          ls -lh
+          sudo chown -R "$USER" .
+          zstd -T0 -3 --rm ./*.img
+          mkdir -p out
+          mv ./*.img.zst ./*.bmap ./*.tar.gz out/ 2>/dev/null || true
+          ls -lh out/
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: mobian-sdm845-phosh
+          path: out/*
+          if-no-files-found: error
+          retention-days: 14
