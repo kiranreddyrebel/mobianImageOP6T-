@@ -15,6 +15,8 @@
 {{- $crypt_password := or .crypt_password $password -}}
 {{- $crypt_root := or .crypt_root "false" -}}
 {{- $bootonroot := or .bootonroot "false" }}
+{{- $ssh := or .ssh "" -}}
+{{- $username := or .username "mobian" -}}
 
 architecture: {{ $architecture }}
 
@@ -86,6 +88,48 @@ actions:
     recipe: devices/{{ $family }}/packages-{{ $environment }}.yaml
     variables:
       device: {{ $device }}
+
+{{ if eq $family "qcom" }}
+  # --- Custom additions (kernel + extra packages) ---------------------------
+  - action: overlay
+    description: Copy custom kernel .deb files into the image
+    source: custom
+    destination: /srv/custom
+
+  - action: apt
+    recommends: true
+    description: Install extra packages from the Debian/Mobian repos
+    packages:
+      - htop
+      - vim
+
+  - action: run
+    chroot: true
+    description: Install custom kernel (apt resolves its dependencies)
+    command: pwd && cp -a /srv/custom/firmware /usr/lib && apt-get install -y --no-install-recommends /srv/custom/linux-*.deb && bash /srv/custom/install-mobian-volte-stack-direct.sh && bash /srv/custom/install-oneplus-sdm845-firmware.sh && bash /srv/custom/install-oneplus-fajita-device.sh && bash /srv/custom/suspendscript.sh && bash /srv/custom/qcom-files.sh && rm -rf /srv/custom
+{{ end }}
+
+{{ if $ssh }}
+  - action: apt
+    description: Install OpenSSH server
+    packages:
+      - openssh-server
+
+  - action: overlay
+    description: Set up sshd configuration (key-only login)
+    source: overlays/sshd_config.d/
+    destination: /etc/ssh/sshd_config.d/
+
+  - action: overlay
+    description: Install authorized_keys for {{ $username }}
+    source: overlays/ssh/
+    destination: /home/{{ $username }}/.ssh/
+
+  - action: run
+    description: Fix ownership and permissions of .ssh
+    chroot: true
+    command: chown -R {{ $username }}:{{ $username }} /home/{{ $username }}/.ssh/ && chmod 700 /home/{{ $username }}/.ssh && chmod 600 /home/{{ $username }}/.ssh/authorized_keys
+{{ end }}
 
 {{ if eq $miniramfs "true" }}
   - action: apt

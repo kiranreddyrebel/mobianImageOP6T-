@@ -1,0 +1,10 @@
+[Unit]
+Description=IMS Data service on QMI/QRTR
+After=ModemManager.target
+
+[Service]
+ExecStart=/usr/local/bin/81voltd
+
+[Install]
+WantedBy=multi-user.target
+

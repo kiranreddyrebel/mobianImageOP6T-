@@ -7,8 +7,8 @@
 {{- $nonfree := or .nonfree "false" -}}
 {{- $ssh := or .ssh "" -}}
 {{- $zram:= or .zram "false" -}}
-{{- $debian_suite := or .debian_suite "forky" -}}
-{{- $suite := or .suite $debian_suite -}}
+{{- $debian_suite := "forky" -}}
+{{- $suite := "trixie" -}}
 {{- $rootfs := or .rootfs "rootfs.tar.xz" }}
 {{- $mirror := or .mirror "http://deb.debian.org/debian" -}}
 

@@ -1,0 +1,91 @@
+diff -ruN a/devices/qcom/configs/sdm845.toml b/devices/qcom/configs/sdm845.toml
+--- a/devices/qcom/configs/sdm845.toml	2026-10-21 10:33:28.000000000 +0000
++++ b/devices/qcom/configs/sdm845.toml	2026-10-23 13:06:40.905990980 +0000
+@@ -7,18 +7,6 @@
+ pagesize = 4096
+ 
+ [[device]]
+-vendor = "google"
+-model = "blueline"
+-
+-[[device]]
+-vendor = "lg"
+-model = "judyln"
+-
+-[[device]]
+-vendor = "lg"
+-model = "judyp"
+-
+-[[device]]
+ vendor = "oneplus"
+ model = "enchilada"
+ append = "console=ttyMSM0,115200"
+@@ -27,38 +15,3 @@
+ vendor = "oneplus"
+ model = "fajita"
+ append = "console=ttyMSM0,115200"
+-
+-[[device]]
+-vendor = "samsung"
+-model = "starqltechn"
+-
+-[[device]]
+-vendor = "shift"
+-model = "axolotl"
+-append = "console=ttyMSM0,115200"
+-
+-[[device]]
+-vendor = "sony"
+-model = "xperia-tama-akari"
+-
+-[[device]]
+-vendor = "sony"
+-model = "xperia-tama-akatsuki"
+-
+-[[device]]
+-vendor = "sony"
+-model = "xperia-tama-apollo"
+-
+-[[device]]
+-vendor = "xiaomi"
+-model = "beryllium"
+-variant = "ebbg"
+-
+-[[device]]
+-vendor = "xiaomi"
+-model = "beryllium"
+-variant = "tianma"
+-
+-[[device]]
+-vendor = "xiaomi"
+-model = "polaris"
+diff -ruN a/image.yaml b/image.yaml
+--- a/image.yaml	2026-10-21 10:33:28.000000000 +0000
++++ b/image.yaml	2026-10-23 13:06:40.905785953 +0000
+@@ -87,6 +87,26 @@
+     variables:
+       device: {{ $device }}
+ 
++{{ if eq $family "qcom" }}
++  # --- Custom additions (kernel + extra packages) ---------------------------
++  - action: overlay
++    description: Copy custom kernel .deb files into the image
++    source: custom
++    destination: /srv/custom
++
++  - action: apt
++    recommends: true
++    description: Install extra packages from the Debian/Mobian repos
++    packages:
++      - htop
++      - vim
++
++  - action: run
++    chroot: true
++    description: Install custom kernel (apt resolves its dependencies)
++    command: apt-get install -y --no-install-recommends /srv/custom/linux-image-[0-9]*.deb && rm -rf /srv/custom
++{{ end }}
++
+ {{ if eq $miniramfs "true" }}
+   - action: apt
+     recommends: true

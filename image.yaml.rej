@@ -1,0 +1,29 @@
+--- image.yaml	2026-10-21 10:33:28.000000000 +0000
++++ image.yaml	2026-10-23 13:06:40.905785953 +0000
+@@ -87,6 +87,26 @@
+     variables:
+       device: {{ $device }}
+ 
++{{ if eq $family "qcom" }}
++  # --- Custom additions (kernel + extra packages) ---------------------------
++  - action: overlay
++    description: Copy custom kernel .deb files into the image
++    source: custom
++    destination: /srv/custom
++
++  - action: apt
++    recommends: true
++    description: Install extra packages from the Debian/Mobian repos
++    packages:
++      - htop
++      - vim
++
++  - action: run
++    chroot: true
++    description: Install custom kernel (apt resolves its dependencies)
++    command: apt-get install -y --no-install-recommends /srv/custom/linux-image-[0-9]*.deb && rm -rf /srv/custom
++{{ end }}
++
+ {{ if eq $miniramfs "true" }}
+   - action: apt
+     recommends: true
