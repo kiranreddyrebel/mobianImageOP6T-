@@ -106,7 +106,7 @@ actions:
   - action: run
     chroot: true
     description: Install custom kernel (apt resolves its dependencies)
-    command: pwd && cp -a /srv/custom/firmware /usr/lib && apt-get install -y --no-install-recommends /srv/custom/linux-*.deb && bash /srv/custom/install-mobian-volte-stack-direct.sh && bash /srv/custom/install-oneplus-sdm845-firmware.sh && bash /srv/custom/install-oneplus-fajita-device.sh && bash /srv/custom/suspendscript.sh && bash /srv/custom/qcom-files.sh && rm -rf /srv/custom
+    command: pwd && cp -a /srv/custom/firmware /usr/lib && apt-get install -y --no-install-recommends /srv/custom/linux-*.deb && bash /srv/custom/install-mobian-volte-stack-direct.sh && bash /srv/custom/install-oneplus-sdm845-firmware.sh && bash /srv/custom/install-oneplus-fajita-device.sh && bash /srv/custom/touch-to-work-aftersuspend.sh && bash /srv/custom/qcom-files.sh && systemctl enable qbootctl.service && systemctl enable q6voiced.service && systemctl enable 81voltd.service && systemctl enable call_audio_idle_suspend_workaround.service && systemctl enable touch-rebind.service && rm -rf /srv/custom
 {{ end }}
 
 {{ if $ssh }}
